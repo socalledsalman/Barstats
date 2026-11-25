@@ -55,22 +55,21 @@ jobs:
       - name: Sync Capacitor
         run: npx cap sync android
 
-      - name: Patch Android Safe-Area (fitsSystemWindows) & Version Code
+      -       - name: Patch Android Safe-Area (fitsSystemWindows) & Version Code
         env:
           RUN_NUM: ${{ github.run_number }}
         run: |
-          # 1. Ensure WebView respects status bar & bottom gesture bar on all Android versions
           LAYOUT="android/app/src/main/res/layout/activity_main.xml"
           if [ -f "$LAYOUT" ]; then
             sed -i 's/android:layout_height="match_parent"/android:layout_height="match_parent" android:fitsSystemWindows="true"/' "$LAYOUT"
           fi
 
-          # 2. Auto-increment versionCode so Android allows in-place app updates
           VER_CODE=$((100 + RUN_NUM))
           GRADLE="android/app/build.gradle"
           sed -i "s/versionCode [0-9]*/versionCode $VER_CODE/" "$GRADLE"
-          sed -i "s/versionName "[^"]*"/versionName "2.0.$RUN_NUM"/" "$GRADLE"
+          sed -i 's/versionName "[^"]*"/versionName "2.0.'"$RUN_NUM"'"/' "$GRADLE"
           echo "Configured versionCode=$VER_CODE versionName=2.0.$RUN_NUM"
+          
 
       - name: Build & Sign APK
         env:
