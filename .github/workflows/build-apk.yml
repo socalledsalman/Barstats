@@ -1,1 +1,69 @@
+name: Build Android APK
 
+on:
+  push:
+    branches: [ main, master ]
+    tags: [ 'v*' ]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build-apk:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Setup Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Bundle Offline Fonts (graceful fallback if unavailable)
+        run: |
+          mkdir -p www/fonts
+          curl -fsSL "https://cdn.jsdelivr.net/fontsource/fonts/inter:vf@latest/latin-wght-normal.woff2" -o www/fonts/inter.woff2 || true
+          curl -fsSL "https://cdn.jsdelivr.net/fontsource/fonts/geist:vf@latest/latin-wght-normal.woff2" -o www/fonts/geist.woff2 || true
+          curl -fsSL "https://cdn.jsdelivr.net/fontsource/fonts/plus-jakarta-sans:vf@latest/latin-wght-normal.woff2" -o www/fonts/jakarta.woff2 || true
+          curl -fsSL "https://cdn.jsdelivr.net/fontsource/fonts/jetbrains-mono:vf@latest/latin-wght-normal.woff2" -o www/fonts/mono.woff2 || true
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Add Android Platform & Sync Capacitor
+        run: |
+          npx cap add android
+          npx cap sync android
+
+      - name: Build Debug APK
+        working-directory: android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug
+
+      - name: Prepare APK
+        run: |
+          mkdir -p release
+          cp android/app/build/outputs/apk/debug/app-debug.apk release/Barstats.apk
+
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Barstats-APK
+          path: release/Barstats.apk
+
+      - name: Publish GitHub Release (on version tag v*)
+        if: startsWith(github.ref, 'refs/tags/v')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: release/Barstats.apk
+          generate_release_notes: true
