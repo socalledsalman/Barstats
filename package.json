@@ -1,18 +1,23 @@
 {
   "name": "barstats",
-  "version": "1.0.0",
-  "description": "Barstats - Minimal offline-first workout tracker & progression logger",
+  "version": "2.0.0",
+  "description": "Barstats by Diamond Gym - Minimal offline-first workout tracker",
   "private": true,
   "scripts": {
     "cap:add": "npx cap add android",
+    "cap:assets": "npx capacitor-assets generate --android --iconBackgroundColor '#000000' --iconBackgroundColorDark '#000000' --splashBackgroundColor '#000000' --splashBackgroundColorDark '#000000'",
     "cap:sync": "npx cap sync android",
     "cap:open": "npx cap open android"
   },
   "dependencies": {
-    "@capacitor/core": "^6.1.2"
+    "@capacitor/core": "^6.1.2",
+    "@capacitor/app": "^6.0.1",
+    "@capacitor/status-bar": "^6.0.1",
+    "@capacitor/splash-screen": "^6.0.2"
   },
   "devDependencies": {
     "@capacitor/android": "^6.1.2",
-    "@capacitor/cli": "^6.1.2"
+    "@capacitor/cli": "^6.1.2",
+    "@capacitor/assets": "^3.0.5"
   }
 }
