@@ -1,0 +1,12 @@
+{
+  "appId": "com.barstats.app",
+  "appName": "Barstats",
+  "webDir": "www",
+  "bundledWebRuntime": false,
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 0,
+      "launchAutoHide": true
+    }
+  }
+}
