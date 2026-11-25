@@ -460,7 +460,7 @@
 
   /* Guaranteed AMOLED Splash Overlay (works on all Android 12+ devices) */
   @keyframes splashOut {
-    0%, 75% { opacity: 1; visibility: visible; }
+    0%, 78% { opacity: 1; visibility: visible; }
     100% { opacity: 0; visibility: hidden; pointer-events: none; }
   }
   .app-splash {
@@ -469,7 +469,7 @@
     display: flex; flex-direction: column; align-items: center; justify-content: center;
     gap: 14px;
     pointer-events: none;
-    animation: splashOut 1.35s ease forwards;
+    animation: splashOut 1.8s ease forwards;
   }
   .app-splash.hide { opacity: 0; visibility: hidden; pointer-events: none; }
   .splash-title { font-size: 28px; font-weight: 800; letter-spacing: -0.6px; color: #ffffff; margin-top: 4px; }
@@ -3149,6 +3149,10 @@
   }
 
   try {
+    const CapSplash = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.SplashScreen;
+    if (CapSplash) CapSplash.hide().catch(() => {});
+  } catch (e) {}
+  try {
     applyTheme();
     initNativeBackButton();
     renderAll();
@@ -3159,7 +3163,7 @@
   setTimeout(() => {
     const sp = document.getElementById("appSplash");
     if (sp) sp.classList.add("hide");
-  }, 1100);
+  }, 1500);
 })();
 </script>
 </body>
