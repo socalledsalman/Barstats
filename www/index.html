@@ -22,16 +22,16 @@
     --accent: #3b82f6;
     --accent-soft: rgba(59, 130, 246, 0.14);
     --accent-fg: #ffffff;
-    --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-ui: 'Inter', 'Noto Sans Devanagari', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
     --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
     --shadow: 0 8px 24px rgba(0, 0, 0, 0.28);
   }
 
-  [data-font="system"]  { --font-ui: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-  [data-font="inter"]   { --font-ui: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-  [data-font="geist"]   { --font-ui: 'Geist', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif; }
-  [data-font="jakarta"] { --font-ui: 'Plus Jakarta Sans', 'Inter', -apple-system, sans-serif; }
-  [data-font="mono"]    { --font-ui: 'JetBrains Mono', ui-monospace, monospace; }
+  [data-font="system"]  { --font-ui: 'Noto Sans Devanagari', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+  [data-font="inter"]   { --font-ui: 'Inter', 'Noto Sans Devanagari', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+  [data-font="geist"]   { --font-ui: 'Geist', 'Inter', 'Noto Sans Devanagari', -apple-system, BlinkMacSystemFont, sans-serif; }
+  [data-font="jakarta"] { --font-ui: 'Plus Jakarta Sans', 'Inter', 'Noto Sans Devanagari', -apple-system, sans-serif; }
+  [data-font="mono"]    { --font-ui: 'JetBrains Mono', 'Noto Sans Devanagari', ui-monospace, monospace; }
 
   /* Surfaces */
   [data-surface="light"] {
@@ -70,7 +70,7 @@
 
   * { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
   html, body {
-    margin: 0; padding: 0; width: 100%; height: 100%;
+    margin: 0; padding: 0; width: 100%; height: 100%; height: 100dvh;
     overflow: hidden;
     background: var(--bg); color: var(--text);
     font-family: var(--font-ui); font-size: 14.5px; line-height: 1.4;
@@ -90,7 +90,7 @@
   /* App Shell */
   .app-shell {
     display: flex; flex-direction: column;
-    width: 100%; height: 100%;
+    width: 100%; height: 100%; height: 100dvh;
     padding-top: var(--safe-top);
     padding-bottom: var(--safe-bottom);
   }
@@ -126,7 +126,7 @@
   .pages-track::-webkit-scrollbar { display: none; }
 
   .page {
-    flex: 0 0 100%; width: 100%; min-width: 100%; height: 100%;
+    flex: 0 0 100%; width: 100%; min-width: 100%; height: 100%; height: 100dvh;
     overflow-y: auto; overflow-x: hidden;
     scroll-snap-align: start; scroll-snap-stop: always;
     padding: 18px 18px 34px;
@@ -457,7 +457,7 @@
   }
   .pr-toast.show { transform: translate(-50%, 0); }
   #confettiCanvas {
-    position: fixed; inset: 0; width: 100%; height: 100%;
+    position: fixed; inset: 0; width: 100%; height: 100%; height: 100dvh;
     z-index: 145; pointer-events: none;
   }
 
@@ -555,6 +555,13 @@
     display: grid; grid-template-columns: 1fr 1fr; gap: 8px;
     margin-bottom: 12px;
   }
+
+  /* Bodyweight quick-log row */
+  .bw-input-row { display: flex; align-items: center; gap: 8px; margin-top: 10px; }
+  .bw-input-row .input { flex: 1; font-family: var(--font-mono); font-weight: 700; }
+  .bw-stat-pills { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 10px 0; }
+  .bw-stat-box { background: var(--card-2); border: 1px solid var(--border); border-radius: 10px; padding: 8px 10px; }
+  .brand-credit { text-align: center; color: var(--muted); font-size: 11.5px; margin-top: 18px; opacity: 0.8; }
 </style>
 </head>
 <body>
@@ -591,15 +598,15 @@
   <nav class="bottom-nav" id="bottomNav">
     <button class="nav-item active" data-page="0">
       <svg class="ic" viewBox="0 0 24 24"><path d="M6.5 6.5v11M17.5 6.5v11M3 9.5v5M21 9.5v5M6.5 12h11"/></svg>
-      <span>Train</span>
+      <span id="navLbl0">Train</span>
     </button>
     <button class="nav-item" data-page="1">
       <svg class="ic" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg>
-      <span>Stats</span>
+      <span id="navLbl1">Stats</span>
     </button>
     <button class="nav-item" data-page="2">
       <svg class="ic" viewBox="0 0 24 24"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
-      <span>Library</span>
+      <span id="navLbl2">Library</span>
     </button>
   </nav>
 </div>
@@ -625,7 +632,7 @@
 <div class="rest-pill" id="restPill">
   <div class="row-between">
     <div class="row">
-      <span class="muted" style="font-weight:700;text-transform:uppercase;letter-spacing:0.6px;">Rest</span>
+      <span class="muted" id="restLbl" style="font-weight:700;text-transform:uppercase;letter-spacing:0.6px;">Rest</span>
       <span class="mono" id="restCountdown" style="font-size:17px;font-weight:700;color:var(--accent);">1:30</span>
     </div>
     <div class="row">
@@ -644,7 +651,7 @@
       <button class="icon-btn" id="closeSettingsBtn" aria-label="Back">
         <svg class="ic" viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
       </button>
-      <div class="brand-title">Settings</div>
+      <div class="brand-title" id="settingsHeaderTitle">Settings</div>
     </div>
   </header>
   <div class="settings-body" id="settingsBody"></div>
@@ -672,6 +679,132 @@
     }
   };
   const STORAGE_KEY = "barstats_v1_state";
+
+  /* ==================== NATURAL HINDI + ENGLISH I18N ==================== */
+  const I18N = {
+    en: {
+      train: "Train", stats: "Stats", library: "Library", settings: "Settings",
+      startSession: "Start Session", resume: "Resume", resumeSession: "Resume Session",
+      loadTemplate: "Load template", recent: "Recent", todaysSession: "Today's Session",
+      startAnother: "Start Another Session", lifts: "Lifts", workSets: "Work Sets", volume: "Volume",
+      logged: "Logged", done: "Done", workout: "Workout", session: "Session",
+      noExYet: "No exercises added yet. Tap Resume to log your first lift.",
+      setSingle: "set", setPlural: "sets", top: "Top", best: "Best",
+      finish: "Finish", rest: "Rest", skip: "Skip", close: "Close",
+      liftSingle: "lift", liftPlural: "lifts",
+      last: "Last", firstTime: "First time", weight: "WEIGHT", reps: "REPS",
+      logSet: "✓ Log Set", addExercise: "+ Add Exercise", discardSession: "Discard Session",
+      discardTitle: "Discard Session?", discardMsg: "All sets logged in this active session will be deleted.",
+      cancel: "Cancel", discard: "Discard", edit: "Edit", editSet: "Edit Set",
+      tag: "Tag", delete: "Delete", save: "Save",
+      noSetsLogged: "No sets logged", noSetsMsg: "Log at least one set before finishing, or discard this session.",
+      gotIt: "Got it", pattern: "pattern",
+      addExTitle: "Add Exercise", customBtn: "+ Custom",
+      searchOrType: "Search or type new exercise...", createQuick: '+ Create "{q}"',
+      noMatchesPicker: "No matches. Tap Create above to add it.",
+      createCustomTitle: "Create Custom Exercise", exName: "Exercise Name", exPlaceholder: "e.g. Pendlay Row",
+      muscleGroup: "Muscle Group", saveAndAdd: "Save & Add",
+      loadTplTitle: "Load Template", start: "Start", noTplYet: "No templates yet. Create one in Library.",
+      recentSessions: "Recent Sessions", repeat: "Repeat", noPastWorkouts: "No past workouts logged yet.",
+      today: "Today", week: "Week", month: "Month", range: "Range",
+      last30d: "Last 30d", allTime: "All Time", sessions: "Sessions",
+      consistency: "12-Week Consistency", activeDays: "active days", restDay: "Rest day",
+      volumeTrend: "Volume Trend", noVolFrame: "No volume logged in this timeframe.",
+      workingSetsMuscle: "Working Sets by Muscle", trackedLifts: "Tracked Lifts (Est. 1RM)",
+      tapForChart: "Tap for chart", logForStats: "Log a session to see Est. 1RM progression and Rep-Max tables.",
+      est1rm: "Est. 1RM", sessionVol: "Session Volume", repMaxBest: "Rep-Max Best",
+      logForProg: "Log at least 1 working set to view progression.",
+      calloutUntouched: "{m} hasn't been trained in the last 7 days.",
+      calloutLast: "Last session logged {d} · {n} total workouts tracked.",
+      exercises: "Exercises", templates: "Templates", searchEx: "Search exercises...",
+      newBtn: "+ New", custom: "Custom", noExFound: "No exercises found.",
+      newTplBtn: "+ New Template", newTplTitle: "New Workout Template",
+      tplName: "Template Name", tplPlaceholder: "e.g. Upper Body A", selectEx: "Select Exercises",
+      language: "Language", surface: "Surface", amoled: "AMOLED", dark: "Dark", light: "Light",
+      typography: "Typography", accentColor: "Accent Color", training: "Training",
+      weightUnit: "Weight Unit", weightUnitSub: "Display and steppers",
+      defaultRest: "Default Rest Timer", restChime: "Rest Chime Sound", restChimeSub: "Offline Web Audio tone at 0:00",
+      exAnims: "Exercise Animations", exAnimsSub: "Minimal movement icons",
+      perfCallouts: "Performance Callouts", perfCalloutsSub: "Actionable banner on Stats",
+      dataBackup: "Local-First Data & Backup", exportJson: "Export JSON", copyJson: "Copy JSON",
+      importFile: "Import File", pasteJson: "Paste JSON", loadDemo: "Load Demo Data", resetAll: "Reset All",
+      resetTitle: "Reset All Data?", resetMsg: "This clears all logged workouts and restores defaults.",
+      reset: "Reset", pasteTitle: "Paste Backup JSON", restoreBackup: "Restore Backup",
+      pr1rm: "New Est. 1RM · {v} {u}", prRep: "New {r}RM · {v} {u}",
+      toastCopied: "Backup JSON copied", toastCopyFail: "Copy failed",
+      toastDemo: "Sample history loaded", toastRestored: "Backup restored", toastInvalid: "Invalid JSON file",
+            exportCsv: "Export CSV", csvExported: "CSV log exported", noWorkoutsCsv: "No workouts to export yet",
+      bodyweight: "Bodyweight", avg7d: "7-Day Avg", latest: "Latest", logBw: "Log",
+      bwPlaceholder: "Weight", bwHistory: "History", noBwYet: "Log your daily weight to see your 7-day moving average.",
+      bwLogged: "Bodyweight logged",
+      dayHistory: "Session History", deleteSession: "Delete Session", deleteSessionQ: "Delete this logged session?",
+      pressBackExit: "Press back again to exit", tapTileInspect: "Tap any trained day to view/edit",
+      byDiamond: "Barstats by Diamond Gym · v2.0",
+      all: "All",
+      muscles: { Chest: "Chest", Back: "Back", Legs: "Legs", Shoulders: "Shoulders", Arms: "Arms", Core: "Core", Other: "Other" }
+    },
+    hi: {
+      train: "ट्रेनिंग", stats: "स्टैट्स", library: "लाइब्रेरी", settings: "सेटिंग्स",
+      startSession: "सेशन शुरू करें", resume: "जारी रखें", resumeSession: "सेशन जारी रखें",
+      loadTemplate: "टेम्पलेट लोड करें", recent: "पिछले सेशन", todaysSession: "आज का सेशन",
+      startAnother: "नया सेशन शुरू करें", lifts: "एक्सरसाइज़", workSets: "वर्किंग सेट", volume: "वॉल्यूम",
+      logged: "सेव हो गया", done: "पूरा", workout: "वर्कआउट", session: "सेशन",
+      noExYet: "अभी कोई एक्सरसाइज़ नहीं जोड़ी। पहली लिफ्ट लॉग करने के लिए 'जारी रखें' दबाएं।",
+      setSingle: "सेट", setPlural: "सेट", top: "टॉप", best: "बेस्ट",
+      finish: "खत्म करें", rest: "आराम", skip: "स्किप", close: "बंद करें",
+      liftSingle: "लिफ्ट", liftPlural: "लिफ्ट्स",
+      last: "पिछला", firstTime: "पहली बार", weight: "वज़न", reps: "रेप्स",
+      logSet: "✓ सेट सेव करें", addExercise: "+ एक्सरसाइज़ जोड़ें", discardSession: "सेशन कैंसल करें",
+      discardTitle: "सेशन कैंसल करें?", discardMsg: "इस सेशन में लॉग किए गए सारे सेट हट जाएंगे।",
+      cancel: "रद्द करें", discard: "कैंसल करें", edit: "बदलें", editSet: "सेट बदलें",
+      tag: "टैग", delete: "हटाएं", save: "सेव करें",
+      noSetsLogged: "कोई सेट लॉग नहीं हुआ", noSetsMsg: "सेशन खत्म करने से पहले कम से कम एक सेट लॉग करें, या इसे कैंसल कर दें।",
+      gotIt: "ठीक है", pattern: "मूवमेंट",
+      addExTitle: "एक्सरसाइज़ जोड़ें", customBtn: "+ नई बनाएं",
+      searchOrType: "खोजें या नई एक्सरसाइज़ लिखें...", createQuick: '+ "{q}" जोड़ें',
+      noMatchesPicker: "कुछ नहीं मिला। ऊपर से नई एक्सरसाइज़ जोड़ें।",
+      createCustomTitle: "नई एक्सरसाइज़ बनाएं", exName: "एक्सरसाइज़ का नाम", exPlaceholder: "जैसे: पेंडले रो",
+      muscleGroup: "मसल ग्रुप", saveAndAdd: "सेव करके जोड़ें",
+      loadTplTitle: "टेम्पलेट चुनें", start: "शुरू करें", noTplYet: "अभी कोई टेम्पलेट नहीं है। लाइब्रेरी में बनाएं।",
+      recentSessions: "पिछले सेशन", repeat: "दोहराएं", noPastWorkouts: "अभी कोई पुराना वर्कआउट नहीं है।",
+      today: "आज", week: "हफ्ता", month: "महीना", range: "तारीख",
+      last30d: "पिछले 30 दिन", allTime: "अब तक", sessions: "सेशन",
+      consistency: "12 हफ्तों की रेगुलैरिटी", activeDays: "दिन वर्कआउट", restDay: "रेस्ट डे",
+      volumeTrend: "वॉल्यूम ट्रेंड", noVolFrame: "इस समय में कोई वॉल्यूम लॉग नहीं हुआ।",
+      workingSetsMuscle: "मसल के हिसाब से वर्किंग सेट", trackedLifts: "ट्रैक की गई लिफ्ट्स (1RM)",
+      tapForChart: "चार्ट देखें", logForStats: "1RM प्रोग्रेस और रेप-मैक्स देखने के लिए एक सेशन लॉग करें।",
+      est1rm: "अनुमानित 1RM", sessionVol: "सेशन वॉल्यूम", repMaxBest: "बेस्ट रेप-मैक्स",
+      logForProg: "प्रोग्रेस देखने के लिए कम से कम 1 वर्किंग सेट लॉग करें।",
+      calloutUntouched: "पिछले 7 दिनों से {m} की ट्रेनिंग नहीं हुई है।",
+      calloutLast: "आखिरी सेशन {d} को · कुल {n} वर्कआउट लॉग हुए।",
+      exercises: "एक्सरसाइज़", templates: "टेम्पलेट", searchEx: "एक्सरसाइज़ खोजें...",
+      newBtn: "+ नई", custom: "कस्टम", noExFound: "कोई एक्सरसाइज़ नहीं मिली।",
+      newTplBtn: "+ नया टेम्पलेट", newTplTitle: "नया वर्कआउट टेम्पलेट",
+      tplName: "टेम्पलेट का नाम", tplPlaceholder: "जैसे: अपर बॉडी A", selectEx: "एक्सरसाइज़ चुनें",
+      language: "भाषा / Language", surface: "थीम", amoled: "AMOLED", dark: "डार्क", light: "लाइट",
+      typography: "फ़ॉन्ट", accentColor: "एक्सेंट कलर", training: "ट्रेनिंग",
+      weightUnit: "वज़न की यूनिट", weightUnitSub: "डिस्प्ले और स्टेपर के लिए",
+      defaultRest: "रेस्ट टाइमर", restChime: "आराम खत्म होने की आवाज़", restChimeSub: "0:00 पर हल्की बीप",
+      exAnims: "एक्सरसाइज़ एनीमेशन", exAnimsSub: "छोटे मूवमेंट आइकन",
+      perfCallouts: "परफॉर्मेंस सुझाव", perfCalloutsSub: "स्टैट्स पर ज़रूरी टिप",
+      dataBackup: "डेटा और बैकअप (ऑफ़लाइन)", exportJson: "JSON डाउनलोड", copyJson: "JSON कॉपी",
+      importFile: "फ़ाइल इम्पोर्ट", pasteJson: "JSON पेस्ट", loadDemo: "डेमो डेटा लोड करें", resetAll: "सब रीसेट करें",
+      resetTitle: "सारा डेटा हटा दें?", resetMsg: "इससे आपके सारे लॉग किए हुए वर्कआउट हट जाएंगे।",
+      reset: "रीसेट करें", pasteTitle: "बैकअप JSON पेस्ट करें", restoreBackup: "बैकअप रीस्टोर करें",
+      pr1rm: "नया 1RM रिकॉर्ड · {v} {u}", prRep: "नया {r}RM रिकॉर्ड · {v} {u}",
+      toastCopied: "बैकअप JSON कॉपी हो गया", toastCopyFail: "कॉपी नहीं हो पाया",
+      toastDemo: "डेमो डेटा लोड हो गया", toastRestored: "बैकअप रीस्टोर हो गया", toastInvalid: "गलत JSON फ़ाइल",
+            exportCsv: "CSV डाउनलोड", csvExported: "CSV फ़ाइल सेव हो गई", noWorkoutsCsv: "अभी कोई वर्कआउट नहीं है",
+      bodyweight: "बॉडीवेट", avg7d: "7 दिन का औसत", latest: "ताज़ा वज़न", logBw: "सेव",
+      bwPlaceholder: "वज़न", bwHistory: "हिस्ट्री", noBwYet: "7 दिन का औसत देखने के लिए रोज़ का वज़न लॉग करें।",
+      bwLogged: "बॉडीवेट सेव हो गया",
+      dayHistory: "उस दिन का वर्कआउट", deleteSession: "सेशन हटाएं", deleteSessionQ: "क्या यह लॉग किया हुआ सेशन हटा दें?",
+      pressBackExit: "बाहर निकलने के लिए फिर बैक दबाएं", tapTileInspect: "डिटेल देखने के लिए किसी भी दिन पर टैप करें",
+      byDiamond: "Barstats by Diamond Gym · v2.0",
+      all: "सभी",
+      muscles: { Chest: "चेस्ट", Back: "बैक", Legs: "लेग्स", Shoulders: "शोल्डर", Arms: "आर्म्स", Core: "कोर", Other: "अन्य" }
+    }
+  };
 
   /* ==================== DEFAULT EXERCISES & TEMPLATES ==================== */
   const MUSCLES = ["Chest", "Back", "Legs", "Shoulders", "Arms", "Core"];
@@ -713,6 +846,7 @@
   ];
 
   const DEFAULT_SETTINGS = {
+    lang: "en",
     surface: "amoled",
     font: "inter",
     accent: "#3b82f6",
@@ -729,7 +863,7 @@
   let libTab = "exercises";
   let libMuscle = "All";
   let libSearch = "";
-  let statsMode = "week"; // today | week | month | range
+  let statsMode = "week";
   let statsFrom = daysAgoStr(30);
   let statsTo = todayStr();
   let calloutDismissed = false;
@@ -750,6 +884,7 @@
           exercises: Array.isArray(parsed.exercises) && parsed.exercises.length ? parsed.exercises : DEFAULT_EXERCISES.slice(),
           templates: Array.isArray(parsed.templates) ? parsed.templates : DEFAULT_TEMPLATES.slice(),
           workouts: Array.isArray(parsed.workouts) ? parsed.workouts : [],
+          bodyweights: Array.isArray(parsed.bodyweights) ? parsed.bodyweights : [],
           activeWorkout: parsed.activeWorkout || null
         };
       } catch (e) {}
@@ -759,12 +894,40 @@
       exercises: DEFAULT_EXERCISES.slice(),
       templates: DEFAULT_TEMPLATES.slice(),
       workouts: [],
+      bodyweights: [],
       activeWorkout: null
     };
   }
 
   function saveState() {
     Store.set(STORAGE_KEY, JSON.stringify(state));
+  }
+
+  function t(key, vars) {
+    const dict = I18N[state.settings.lang] || I18N.en;
+    let str = dict[key] !== undefined ? dict[key] : (I18N.en[key] || key);
+    if (vars) {
+      Object.keys(vars).forEach(k => { str = str.replace("{" + k + "}", vars[k]); });
+    }
+    return str;
+  }
+
+  function mLabel(m) {
+    if (m === "All") return t("all");
+    const dict = I18N[state.settings.lang] || I18N.en;
+    return (dict.muscles && dict.muscles[m]) || m;
+  }
+
+  function applyStaticLabels() {
+    document.documentElement.lang = state.settings.lang || "en";
+    document.getElementById("navLbl0").textContent = t("train");
+    document.getElementById("navLbl1").textContent = t("stats");
+    document.getElementById("navLbl2").textContent = t("library");
+    document.getElementById("finishWorkoutBtn").textContent = t("finish");
+    document.getElementById("restLbl").textContent = t("rest");
+    document.getElementById("restSkipBtn").textContent = t("skip");
+    document.getElementById("settingsHeaderTitle").textContent = t("settings");
+    updateNavUI(currentPage);
   }
 
   /* ==================== HELPERS ==================== */
@@ -785,7 +948,8 @@
   function formatDateNice(str) {
     const [y, m, d] = str.split("-").map(Number);
     const dt = new Date(y, m - 1, d);
-    return dt.toLocaleDateString(undefined, { weekday: "short", month: "short", day: "numeric" });
+    const loc = state.settings.lang === "hi" ? "hi-IN" : undefined;
+    return dt.toLocaleDateString(loc, { weekday: "short", month: "short", day: "numeric" });
   }
   function formatDuration(sec) {
     const m = Math.floor(sec / 60), s = Math.floor(sec % 60);
@@ -851,9 +1015,57 @@
     document.documentElement.style.setProperty("--accent-soft", hexToRgba(s.accent, 0.14));
     document.body.classList.toggle("no-anim", !s.animations);
     const metaTheme = document.querySelector('meta[name="theme-color"]');
-    if (metaTheme) {
-      metaTheme.content = s.surface === "light" ? "#f6f7f9" : (s.surface === "dark" ? "#0c0f14" : "#000000");
-    }
+    const bgHex = s.surface === "light" ? "#f6f7f9" : (s.surface === "dark" ? "#0c0f14" : "#000000");
+    if (metaTheme) metaTheme.content = bgHex;
+    syncNativeStatusBar(s.surface, bgHex);
+    applyStaticLabels();
+  }
+
+  
+  /* ==================== CAPACITOR NATIVE BRIDGES (STATUS BAR & BACK BUTTON) ==================== */
+  function syncNativeStatusBar(surface, bgHex) {
+    try {
+      const SB = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.StatusBar;
+      if (!SB) return;
+      SB.setOverlaysWebView({ overlay: false }).catch(() => {});
+      SB.setBackgroundColor({ color: bgHex }).catch(() => {});
+      SB.setStyle({ style: surface === "light" ? "LIGHT" : "DARK" }).catch(() => {});
+    } catch (e) {}
+  }
+
+  let lastBackPress = 0;
+  function initNativeBackButton() {
+    try {
+      const CapApp = window.Capacitor && window.Capacitor.Plugins && window.Capacitor.Plugins.App;
+      if (!CapApp) return;
+      CapApp.addListener("backButton", () => {
+        if (modalBackdrop.classList.contains("open")) {
+          closeModal();
+          return;
+        }
+        const sd = document.getElementById("settingsDrawer");
+        if (sd && sd.classList.contains("open")) {
+          sd.classList.remove("open");
+          return;
+        }
+        const fo = document.getElementById("focusOverlay");
+        if (fo && fo.classList.contains("open")) {
+          closeFocusOverlay();
+          return;
+        }
+        if (currentPage !== 0) {
+          goToPage(0);
+          return;
+        }
+        const now = Date.now();
+        if (now - lastBackPress < 2000) {
+          CapApp.exitApp();
+        } else {
+          lastBackPress = now;
+          showPRToast(t("pressBackExit"));
+        }
+      });
+    } catch (e) {}
   }
 
   /* ==================== MOVEMENT SVG MICRO-ANIMATIONS ==================== */
@@ -889,7 +1101,6 @@
         <g class="${cls}"><rect x="6" y="7" width="12" height="10" rx="3"/><line x1="12" y1="7" x2="12" y2="17" opacity="0.5"/></g>
       </svg>`;
     }
-    // press default
     return `<svg width="${sz}" height="${sz}" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round">
       <line x1="12" y1="18" x2="12" y2="14" opacity="0.35"/>
       <g class="${cls}"><line x1="4" y1="11" x2="20" y2="11"/><line x1="6.5" y1="8" x2="6.5" y2="14"/><line x1="17.5" y1="8" x2="17.5" y2="14"/></g>
@@ -932,7 +1143,6 @@
   function checkAndCelebratePR(exId, kg, reps, tag) {
     if (tag === "W" || !kg || !reps) return;
     const prev = getAllTimeStats(exId);
-    // Also check earlier sets in current active workout
     if (state.activeWorkout) {
       state.activeWorkout.exercises.forEach(e => {
         if (e.exId !== exId) return;
@@ -947,9 +1157,9 @@
     const new1RM = epley1RM(kg, reps);
     let msg = null;
     if (prev.best1RM > 0 && new1RM > prev.best1RM + 0.2) {
-      msg = `New Est. 1RM · ${toDisplayW(new1RM)} ${state.settings.unit}`;
+      msg = t("pr1rm", { v: toDisplayW(new1RM), u: state.settings.unit });
     } else if (prev.bestByReps[reps] && kg > prev.bestByReps[reps] + 0.1) {
-      msg = `New ${reps}RM · ${toDisplayW(kg)} ${state.settings.unit}`;
+      msg = t("prRep", { r: reps, v: toDisplayW(kg), u: state.settings.unit });
     }
     if (msg) {
       showPRToast(msg);
@@ -1026,28 +1236,39 @@
     } catch (e) {}
   }
 
+  let restEndAt = 0;
+  function tickRestTimer() {
+    if (!restEndAt) return;
+    const left = Math.ceil((restEndAt - Date.now()) / 1000);
+    if (left <= 0) {
+      clearInterval(restInterval);
+      restEndAt = 0;
+      restRemaining = 0;
+      document.getElementById("restPill").classList.remove("show");
+      playChime();
+      return;
+    }
+    restRemaining = left;
+    updateRestPill();
+  }
   function startRestTimer(sec) {
     clearInterval(restInterval);
     restTotal = Math.max(5, sec || state.settings.restSec);
+    restEndAt = Date.now() + restTotal * 1000;
     restRemaining = restTotal;
     updateRestPill();
     document.getElementById("restPill").classList.add("show");
-    restInterval = setInterval(() => {
-      restRemaining--;
-      if (restRemaining <= 0) {
-        clearInterval(restInterval);
-        document.getElementById("restPill").classList.remove("show");
-        playChime();
-        return;
-      }
-      updateRestPill();
-    }, 1000);
+    restInterval = setInterval(tickRestTimer, 250);
   }
   function stopRestTimer() {
     clearInterval(restInterval);
+    restEndAt = 0;
     restRemaining = 0;
     document.getElementById("restPill").classList.remove("show");
   }
+  document.addEventListener("visibilitychange", () => {
+    if (!document.hidden && restEndAt) tickRestTimer();
+  });
   function updateRestPill() {
     document.getElementById("restCountdown").textContent = formatRest(Math.max(0, restRemaining));
     const pct = restTotal ? Math.min(100, (restRemaining / restTotal) * 100) : 0;
@@ -1057,7 +1278,7 @@
   /* ==================== NAVIGATION ==================== */
   const track = document.getElementById("pagesTrack");
   const navBtns = Array.from(document.querySelectorAll(".nav-item"));
-  const pageTitles = ["Train", "Stats", "Library"];
+  const pageKeys = ["train", "stats", "library"];
 
   function goToPage(idx) {
     currentPage = idx;
@@ -1066,7 +1287,7 @@
   }
   function updateNavUI(idx) {
     navBtns.forEach((b, i) => b.classList.toggle("active", i === idx));
-    document.getElementById("topbarSub").textContent = pageTitles[idx] || "Train";
+    document.getElementById("topbarSub").textContent = t(pageKeys[idx] || "train");
   }
   navBtns.forEach(b => b.addEventListener("click", () => goToPage(Number(b.dataset.page))));
   let scrollSnapT = null;
@@ -1130,34 +1351,34 @@
                 <div class="row" style="gap:6px">
                   <span style="font-weight:600">${esc(info.name)}</span>
                   ${ssClass ? `<span class="badge badge-ss">SS</span>` : ""}
-                  ${tags.map(t => `<span class="badge badge-${t.toLowerCase()}">${t}</span>`).join("")}
+                  ${tags.map(tg => `<span class="badge badge-${tg.toLowerCase()}">${tg}</span>`).join("")}
                 </div>
-                <div class="muted">${ex.sets.length} set${ex.sets.length===1?"":"s"}${topSet ? ` · Top ${toDisplayW(topSet.kg)} ${state.settings.unit} × ${topSet.reps}` : ""}</div>
+                <div class="muted">${ex.sets.length} ${ex.sets.length===1?t("setSingle"):t("setPlural")}${topSet ? ` · ${t("top")} ${toDisplayW(topSet.kg)} ${state.settings.unit} × ${topSet.reps}` : ""}</div>
               </div>
               <svg class="ic ic-sm" style="color:var(--muted)" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
             </div>`;
           }).join("")
-        : `<div class="empty-state">No exercises added yet. Tap Resume to log your first lift.</div>`;
+        : `<div class="empty-state">${esc(t("noExYet"))}</div>`;
 
       el.innerHTML = `
         <div class="row-between" style="margin-bottom:14px">
           <div>
             <div class="row" style="gap:7px">
               <span class="pulse-dot"></span>
-              <span style="font-size:17px;font-weight:700">${esc(active.name || "Today's Session")}</span>
+              <span style="font-size:17px;font-weight:700">${esc(active.name || t("todaysSession"))}</span>
             </div>
             <div class="muted">${formatDateNice(today)} · <span class="mono" id="frontLiveTimer">${formatDuration(elapsed)}</span></div>
           </div>
-          <button class="btn btn-primary btn-sm" id="resumeBtn">Resume</button>
+          <button class="btn btn-primary btn-sm" id="resumeBtn">${esc(t("resume"))}</button>
         </div>
         <div class="snapshot-bar">
-          <div class="snap-cell"><div class="snap-val mono">${m.exCount}</div><div class="snap-lbl">Lifts</div></div>
-          <div class="snap-cell"><div class="snap-val mono">${m.workingSets}</div><div class="snap-lbl">Work Sets</div></div>
-          <div class="snap-cell"><div class="snap-val mono">${formatVol(m.vol)}</div><div class="snap-lbl">Volume</div></div>
+          <div class="snap-cell"><div class="snap-val mono">${m.exCount}</div><div class="snap-lbl">${esc(t("lifts"))}</div></div>
+          <div class="snap-cell"><div class="snap-val mono">${m.workingSets}</div><div class="snap-lbl">${esc(t("workSets"))}</div></div>
+          <div class="snap-cell"><div class="snap-val mono">${formatVol(m.vol)}</div><div class="snap-lbl">${esc(t("volume"))}</div></div>
         </div>
         <div class="hairline-list">${rowsHtml}</div>
         <div style="margin-top:18px">
-          <button class="btn btn-soft btn-full" id="resumeFullBtn">Resume Session</button>
+          <button class="btn btn-soft btn-full" id="resumeFullBtn">${esc(t("resumeSession"))}</button>
         </div>
       `;
       el.querySelector("#resumeBtn").onclick = () => openFocusOverlay();
@@ -1182,35 +1403,35 @@
               <span style="font-weight:600">${esc(info.name)}</span>
               ${ssClass ? `<span class="badge badge-ss">SS</span>` : ""}
             </div>
-            <div class="muted">${ex.sets.length} sets${topSet ? ` · Best ${toDisplayW(topSet.kg)} ${state.settings.unit} × ${topSet.reps}` : ""}</div>
+            <div class="muted">${ex.sets.length} ${t("setPlural")}${topSet ? ` · ${t("best")} ${toDisplayW(topSet.kg)} ${state.settings.unit} × ${topSet.reps}` : ""}</div>
           </div>
-          <span class="badge badge-up">Done</span>
+          <span class="badge badge-up">${esc(t("done"))}</span>
         </div>`;
       }).join("");
 
       el.innerHTML = `
         <div class="row-between" style="margin-bottom:14px">
           <div>
-            <div style="font-size:17px;font-weight:700">Today's Session</div>
-            <div class="muted">${formatDateNice(today)} · ${esc(latest.name || "Workout")} · ${formatDuration(latest.durationSec || 0)}</div>
+            <div style="font-size:17px;font-weight:700">${esc(t("todaysSession"))}</div>
+            <div class="muted">${formatDateNice(today)} · ${esc(latest.name || t("workout"))} · ${formatDuration(latest.durationSec || 0)}</div>
           </div>
-          <span class="badge badge-up">Logged</span>
+          <span class="badge badge-up">${esc(t("logged"))}</span>
         </div>
         <div class="snapshot-bar">
-          <div class="snap-cell"><div class="snap-val mono">${m.exCount}</div><div class="snap-lbl">Lifts</div></div>
-          <div class="snap-cell"><div class="snap-val mono">${m.workingSets}</div><div class="snap-lbl">Work Sets</div></div>
-          <div class="snap-cell"><div class="snap-val mono">${formatVol(m.vol)}</div><div class="snap-lbl">Volume</div></div>
+          <div class="snap-cell"><div class="snap-val mono">${m.exCount}</div><div class="snap-lbl">${esc(t("lifts"))}</div></div>
+          <div class="snap-cell"><div class="snap-val mono">${m.workingSets}</div><div class="snap-lbl">${esc(t("workSets"))}</div></div>
+          <div class="snap-cell"><div class="snap-val mono">${formatVol(m.vol)}</div><div class="snap-lbl">${esc(t("volume"))}</div></div>
         </div>
         <div class="hairline-list">${rowsHtml}</div>
         <div style="margin-top:20px;display:flex;flex-direction:column;gap:10px;align-items:center">
-          <button class="btn btn-primary btn-full" id="startAnotherBtn">Start Another Session</button>
+          <button class="btn btn-primary btn-full" id="startAnotherBtn">${esc(t("startAnother"))}</button>
           <div class="hero-sub-links" style="margin-top:4px">
-            <button class="text-link" id="openTplPickerBtn">Load template</button>
-            <button class="text-link" id="openRecentBtn">Recent</button>
+            <button class="text-link" id="openTplPickerBtn">${esc(t("loadTemplate"))}</button>
+            <button class="text-link" id="openRecentBtn">${esc(t("recent"))}</button>
           </div>
         </div>
       `;
-      el.querySelector("#startAnotherBtn").onclick = () => startNewSession("Session", []);
+      el.querySelector("#startAnotherBtn").onclick = () => startNewSession(t("session"), []);
       el.querySelector("#openTplPickerBtn").onclick = openTemplatePicker;
       el.querySelector("#openRecentBtn").onclick = openRecentModal;
       return;
@@ -1220,15 +1441,15 @@
     el.innerHTML = `
       <div class="train-hero">
         <div class="hero-date">${formatDateNice(today)}</div>
-        <button class="btn btn-primary hero-cta" id="heroStartBtn">Start Session</button>
+        <button class="btn btn-primary hero-cta" id="heroStartBtn">${esc(t("startSession"))}</button>
         <div class="hero-sub-links">
-          <button class="text-link" id="openTplPickerBtn">Load template</button>
+          <button class="text-link" id="openTplPickerBtn">${esc(t("loadTemplate"))}</button>
           <span style="color:var(--border)">·</span>
-          <button class="text-link" id="openRecentBtn">Recent</button>
+          <button class="text-link" id="openRecentBtn">${esc(t("recent"))}</button>
         </div>
       </div>
     `;
-    el.querySelector("#heroStartBtn").onclick = () => startNewSession("Session", []);
+    el.querySelector("#heroStartBtn").onclick = () => startNewSession(t("session"), []);
     el.querySelector("#openTplPickerBtn").onclick = openTemplatePicker;
     el.querySelector("#openRecentBtn").onclick = openRecentModal;
   }
@@ -1237,7 +1458,7 @@
   function startNewSession(name, exIds) {
     state.activeWorkout = {
       id: uid("wk"),
-      name: name || "Session",
+      name: name || t("session"),
       date: todayStr(),
       startedAt: Date.now(),
       exercises: (exIds || []).map(id => ({
@@ -1297,7 +1518,7 @@
     let html = `
       <div class="row-between" style="margin-bottom:14px">
         <input class="input" id="sessionNameInput" value="${esc(aw.name)}" style="font-size:16px;font-weight:700;background:transparent;border:none;padding:2px 0;width:70%" />
-        <span class="muted">${aw.exercises.length} lift${aw.exercises.length===1?"":"s"}</span>
+        <span class="muted">${aw.exercises.length} ${aw.exercises.length===1?t("liftSingle"):t("liftPlural")}</span>
       </div>
     `;
 
@@ -1322,7 +1543,7 @@
                     <span style="font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(info.name)}</span>
                     ${isLinked ? `<span class="badge badge-ss">SS</span>` : ""}
                   </div>
-                  <div class="muted">${ex.sets.length} sets${best ? ` · ${toDisplayW(best.kg)} ${unit} × ${best.reps}` : ""}</div>
+                  <div class="muted">${ex.sets.length} ${t("setPlural")}${best ? ` · ${toDisplayW(best.kg)} ${unit} × ${best.reps}` : ""}</div>
                 </div>
               </div>
               <svg class="ic ic-sm" style="color:var(--muted)" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
@@ -1342,7 +1563,7 @@
           </div>
           <div class="row" style="gap:6px">
             ${improved ? `<span class="badge badge-up">↑</span>` : ""}
-            <span class="muted" style="font-size:11px">Edit</span>
+            <span class="muted" style="font-size:11px">${esc(t("edit"))}</span>
           </div>
         </div>`;
       }).join("");
@@ -1351,23 +1572,23 @@
         <div class="ex-block ${isLinked ? "ss-linked" : ""}">
           <div class="row-between" style="margin-bottom:10px">
             <div class="row" style="min-width:0">
-              <button class="ex-anim-btn" data-anim-ex="${ex.exId}" title="Movement preview">${patternSVG(info.pattern)}</button>
+              <button class="ex-anim-btn" data-anim-ex="${ex.exId}">${patternSVG(info.pattern)}</button>
               <div style="min-width:0">
                 <div class="row" style="gap:6px">
                   <span style="font-weight:700;font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${esc(info.name)}</span>
                   ${isLinked ? `<span class="badge badge-ss">SS</span>` : ""}
                 </div>
-                <div class="muted">${esc(info.muscle)}</div>
+                <div class="muted">${esc(mLabel(info.muscle))}</div>
               </div>
             </div>
             <div class="row" style="gap:5px">
-              ${canLink ? `<button class="icon-btn" style="width:32px;height:32px;${ex.supersetWithNext ? "border-color:var(--accent);color:var(--accent)" : ""}" data-ss-ex="${exIdx}" title="Link Superset">
+              ${canLink ? `<button class="icon-btn" style="width:32px;height:32px;${ex.supersetWithNext ? "border-color:var(--accent);color:var(--accent)" : ""}" data-ss-ex="${exIdx}">
                 <svg class="ic ic-sm" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
               </button>` : ""}
-              <button class="icon-btn" style="width:32px;height:32px" data-hist-ex="${ex.exId}" title="History">
+              <button class="icon-btn" style="width:32px;height:32px" data-hist-ex="${ex.exId}">
                 <svg class="ic ic-sm" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
               </button>
-              <button class="icon-btn" style="width:32px;height:32px" data-toggle-ex="${exIdx}" title="Collapse">
+              <button class="icon-btn" style="width:32px;height:32px" data-toggle-ex="${exIdx}">
                 <svg class="ic ic-sm" viewBox="0 0 24 24"><path d="M18 15l-6-6-6 6"/></svg>
               </button>
             </div>
@@ -1380,16 +1601,16 @@
             <div class="row" style="gap:8px">
               <span class="mono muted" style="font-size:12px;font-weight:700">#${nextSetNum}</span>
               <div class="tag-pills">
-                ${["W","D","F"].map(t => `<button class="tag-pill ${ex.pendingTag === t ? "active-"+t : ""}" data-tag="${exIdx}:${t}">${t}</button>`).join("")}
+                ${["W","D","F"].map(tg => `<button class="tag-pill ${ex.pendingTag === tg ? "active-"+tg : ""}" data-tag="${exIdx}:${tg}">${tg}</button>`).join("")}
               </div>
             </div>
-            ${ghost ? `<button type="button" class="text-link mono" style="font-size:11px;padding:2px 6px;border-radius:6px;background:var(--card-2);border:1px solid var(--border)" data-autofill-ghost="${exIdx}" title="Tap to fill">Last: ${ghostW} ${unit} × ${ghostR}</button>` : `<span class="muted" style="font-size:11px">First time</span>`}
+            ${ghost ? `<button type="button" class="text-link mono" style="font-size:11px;padding:2px 6px;border-radius:6px;background:var(--card-2);border:1px solid var(--border)" data-autofill-ghost="${exIdx}">${esc(t("last"))}: ${ghostW} ${unit} × ${ghostR}</button>` : `<span class="muted" style="font-size:11px">${esc(t("firstTime"))}</span>`}
           </div>
 
           <!-- Steppers -->
           <div class="stepper-grid">
             <div>
-              <div class="row-between muted" style="font-size:10.5px;margin-bottom:4px"><span>WEIGHT (${unit.toUpperCase()})</span><span class="mono">±${stepW}</span></div>
+              <div class="row-between muted" style="font-size:10.5px;margin-bottom:4px"><span>${esc(t("weight"))} (${unit.toUpperCase()})</span><span class="mono">±${stepW}</span></div>
               <div class="stepper-box">
                 <button class="step-btn" data-step="${exIdx}:w:-1">−</button>
                 <input type="number" step="any" inputmode="decimal" class="step-input" data-inp="${exIdx}:w" value="${ex.draftWeight}" placeholder="${ghostW !== "" ? ghostW : "0"}" />
@@ -1397,7 +1618,7 @@
               </div>
             </div>
             <div>
-              <div class="row-between muted" style="font-size:10.5px;margin-bottom:4px"><span>REPS</span><span class="mono">±1</span></div>
+              <div class="row-between muted" style="font-size:10.5px;margin-bottom:4px"><span>${esc(t("reps"))}</span><span class="mono">±1</span></div>
               <div class="stepper-box">
                 <button class="step-btn" data-step="${exIdx}:r:-1">−</button>
                 <input type="number" inputmode="numeric" class="step-input" data-inp="${exIdx}:r" value="${ex.draftReps}" placeholder="${ghostR !== "" ? ghostR : "8"}" />
@@ -1407,8 +1628,8 @@
           </div>
 
           <div class="row">
-            <button class="btn btn-primary" style="flex:1" data-log-set="${exIdx}">✓ Log Set</button>
-            <button class="icon-btn" style="width:38px;height:38px;color:var(--muted)" data-del-ex="${exIdx}" title="Remove exercise">
+            <button class="btn btn-primary" style="flex:1" data-log-set="${exIdx}">${esc(t("logSet"))}</button>
+            <button class="icon-btn" style="width:38px;height:38px;color:var(--muted)" data-del-ex="${exIdx}">
               <svg class="ic ic-sm" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg>
             </button>
           </div>
@@ -1418,24 +1639,23 @@
 
     html += `
       <div style="display:flex;flex-direction:column;gap:10px;margin-top:8px">
-        <button class="btn btn-soft btn-full" id="addExFocusBtn">+ Add Exercise</button>
-        <button class="btn btn-danger btn-full" id="discardSessionBtn">Discard Session</button>
+        <button class="btn btn-soft btn-full" id="addExFocusBtn">${esc(t("addExercise"))}</button>
+        <button class="btn btn-danger btn-full" id="discardSessionBtn">${esc(t("discardSession"))}</button>
       </div>
     `;
     body.innerHTML = html;
 
-    // Bind events
     const nameInp = body.querySelector("#sessionNameInput");
     if (nameInp) nameInp.oninput = e => { aw.name = e.target.value; saveState(); };
 
     body.querySelector("#addExFocusBtn").onclick = openExercisePicker;
     body.querySelector("#discardSessionBtn").onclick = () => {
       openModal(`
-        <div style="font-size:16px;font-weight:700;margin-bottom:8px">Discard Session?</div>
-        <div class="muted" style="margin-bottom:16px">All sets logged in this active session will be deleted.</div>
+        <div style="font-size:16px;font-weight:700;margin-bottom:8px">${esc(t("discardTitle"))}</div>
+        <div class="muted" style="margin-bottom:16px">${esc(t("discardMsg"))}</div>
         <div class="grid-2">
-          <button class="btn btn-ghost" id="cancelDiscBtn">Cancel</button>
-          <button class="btn btn-danger" id="confirmDiscBtn">Discard</button>
+          <button class="btn btn-ghost" id="cancelDiscBtn">${esc(t("cancel"))}</button>
+          <button class="btn btn-danger" id="confirmDiscBtn">${esc(t("discard"))}</button>
         </div>
       `);
       document.getElementById("cancelDiscBtn").onclick = closeModal;
@@ -1473,8 +1693,8 @@
           <div style="text-align:center;padding:8px 0">
             <div style="color:var(--accent);margin-bottom:10px">${patternSVG(info.pattern, true)}</div>
             <div style="font-size:17px;font-weight:700">${esc(info.name)}</div>
-            <div class="muted" style="margin-top:4px">${esc(info.muscle)} · ${esc(info.pattern)} pattern</div>
-            <button class="btn btn-ghost btn-full" style="margin-top:18px" id="closeAnimBtn">Close</button>
+            <div class="muted" style="margin-top:4px">${esc(mLabel(info.muscle))} · ${esc(info.pattern)} ${esc(t("pattern"))}</div>
+            <button class="btn btn-ghost btn-full" style="margin-top:18px" id="closeAnimBtn">${esc(t("close"))}</button>
           </div>
         `);
         document.getElementById("closeAnimBtn").onclick = closeModal;
@@ -1500,9 +1720,9 @@
 
     body.querySelectorAll("[data-tag]").forEach(el => {
       el.onclick = () => {
-        const [i, t] = el.dataset.tag.split(":");
+        const [i, tg] = el.dataset.tag.split(":");
         const ex = aw.exercises[Number(i)];
-        ex.pendingTag = ex.pendingTag === t ? "" : t;
+        ex.pendingTag = ex.pendingTag === tg ? "" : tg;
         saveState();
         renderFocusBody();
       };
@@ -1574,20 +1794,20 @@
         const s = ex.sets[sI];
         let editTag = s.tag || "";
         openModal(`
-          <div style="font-size:16px;font-weight:700;margin-bottom:12px">Edit Set #${sI + 1}</div>
+          <div style="font-size:16px;font-weight:700;margin-bottom:12px">${esc(t("editSet"))} #${sI + 1}</div>
           <div class="field">
-            <label>Tag</label>
+            <label>${esc(t("tag"))}</label>
             <div class="tag-pills">
-              ${["W","D","F"].map(t => `<button class="tag-pill ${editTag === t ? "active-"+t : ""}" data-etag="${t}">${t}</button>`).join("")}
+              ${["W","D","F"].map(tg => `<button class="tag-pill ${editTag === tg ? "active-"+tg : ""}" data-etag="${tg}">${tg}</button>`).join("")}
             </div>
           </div>
           <div class="grid-2">
-            <div class="field"><label>Weight (${unit})</label><input type="number" step="any" class="input mono" id="editSetW" value="${toDisplayW(s.kg)}" /></div>
-            <div class="field"><label>Reps</label><input type="number" class="input mono" id="editSetR" value="${s.reps}" /></div>
+            <div class="field"><label>${esc(t("weight"))} (${unit})</label><input type="number" step="any" class="input mono" id="editSetW" value="${toDisplayW(s.kg)}" /></div>
+            <div class="field"><label>${esc(t("reps"))}</label><input type="number" class="input mono" id="editSetR" value="${s.reps}" /></div>
           </div>
           <div class="grid-2" style="margin-top:8px">
-            <button class="btn btn-danger" id="delSetBtn">Delete</button>
-            <button class="btn btn-primary" id="saveSetBtn">Save</button>
+            <button class="btn btn-danger" id="delSetBtn">${esc(t("delete"))}</button>
+            <button class="btn btn-primary" id="saveSetBtn">${esc(t("save"))}</button>
           </div>
         `);
         modalContent.querySelectorAll("[data-etag]").forEach(b => {
@@ -1632,16 +1852,16 @@
       .map(e => ({ exId: e.exId, supersetWithNext: !!e.supersetWithNext, sets: e.sets }));
     if (!cleaned.length) {
       openModal(`
-        <div style="font-size:16px;font-weight:700;margin-bottom:8px">No sets logged</div>
-        <div class="muted" style="margin-bottom:16px">Log at least one set before finishing, or discard this session.</div>
-        <button class="btn btn-primary btn-full" id="okEmptyBtn">Got it</button>
+        <div style="font-size:16px;font-weight:700;margin-bottom:8px">${esc(t("noSetsLogged"))}</div>
+        <div class="muted" style="margin-bottom:16px">${esc(t("noSetsMsg"))}</div>
+        <button class="btn btn-primary btn-full" id="okEmptyBtn">${esc(t("gotIt"))}</button>
       `);
       document.getElementById("okEmptyBtn").onclick = closeModal;
       return;
     }
     state.workouts.push({
       id: aw.id,
-      name: aw.name || "Session",
+      name: aw.name || t("session"),
       date: aw.date || todayStr(),
       durationSec: Math.max(60, Math.floor((Date.now() - aw.startedAt) / 1000)),
       exercises: cleaned
@@ -1653,8 +1873,8 @@
     renderAll();
   };
 
-  document.getElementById("restSubBtn").onclick = () => { restRemaining = Math.max(1, restRemaining - 15); updateRestPill(); };
-  document.getElementById("restAddBtn").onclick = () => { restRemaining += 15; restTotal = Math.max(restTotal, restRemaining); updateRestPill(); };
+  document.getElementById("restSubBtn").onclick = () => { if (!restEndAt) return; restEndAt = Math.max(Date.now() + 1000, restEndAt - 15000); tickRestTimer(); };
+  document.getElementById("restAddBtn").onclick = () => { if (!restEndAt) return; restEndAt += 15000; restTotal = Math.max(restTotal, Math.ceil((restEndAt - Date.now()) / 1000)); tickRestTimer(); };
   document.getElementById("restSkipBtn").onclick = stopRestTimer;
 
   /* ==================== EXERCISE PICKER + INSTANT CUSTOM CREATE ==================== */
@@ -1664,23 +1884,23 @@
     function renderPicker() {
       const filtered = state.exercises.filter(e => {
         const matchM = mFilter === "All" || e.muscle === mFilter;
-        const matchQ = !q || e.name.toLowerCase().includes(q.toLowerCase()) || e.muscle.toLowerCase().includes(q.toLowerCase());
+        const matchQ = !q || e.name.toLowerCase().includes(q.toLowerCase()) || e.muscle.toLowerCase().includes(q.toLowerCase()) || mLabel(e.muscle).includes(q);
         return matchM && matchQ;
       });
       const exactMatch = state.exercises.some(e => e.name.toLowerCase() === q.trim().toLowerCase());
 
       modalContent.innerHTML = `
         <div class="row-between" style="margin-bottom:10px">
-          <div style="font-size:16px;font-weight:700">Add Exercise</div>
-          <button class="btn btn-soft btn-xs" id="pickerCustomBtn">+ Custom</button>
+          <div style="font-size:16px;font-weight:700">${esc(t("addExTitle"))}</div>
+          <button class="btn btn-soft btn-xs" id="pickerCustomBtn">${esc(t("customBtn"))}</button>
         </div>
-        <input class="input" id="pickerSearch" placeholder="Search or type new exercise..." value="${esc(q)}" style="margin-bottom:10px" />
+        <input class="input" id="pickerSearch" placeholder="${esc(t("searchOrType"))}" value="${esc(q)}" style="margin-bottom:10px" />
         <div class="chip-row">
-          ${["All", ...MUSCLES].map(m => `<button class="chip ${mFilter===m?"active":""}" data-pm="${m}">${m}</button>`).join("")}
+          ${["All", ...MUSCLES].map(m => `<button class="chip ${mFilter===m?"active":""}" data-pm="${m}">${esc(mLabel(m))}</button>`).join("")}
         </div>
         ${q.trim() && !exactMatch ? `
           <button class="btn btn-soft btn-full" style="margin-bottom:10px;justify-content:flex-start" id="quickCreateExBtn">
-            + Create "${esc(q.trim())}"
+            ${esc(t("createQuick", { q: q.trim() }))}
           </button>
         ` : ""}
         <div class="hairline-list" style="max-height:46vh;overflow-y:auto">
@@ -1688,11 +1908,11 @@
             <div class="hairline-row" data-pick-ex="${e.id}">
               <div>
                 <div style="font-weight:600">${esc(e.name)}</div>
-                <div class="muted">${esc(e.muscle)}</div>
+                <div class="muted">${esc(mLabel(e.muscle))}</div>
               </div>
               <span class="muted">+</span>
             </div>
-          `).join("") || `<div class="empty-state">No matches. Tap Create above to add it.</div>`}
+          `).join("") || `<div class="empty-state">${esc(t("noMatchesPicker"))}</div>`}
         </div>
       `;
 
@@ -1732,17 +1952,17 @@
 
   function openCreateExerciseModal(prefillName, prefillMuscle, onCreated) {
     openModal(`
-      <div style="font-size:16px;font-weight:700;margin-bottom:12px">Create Custom Exercise</div>
-      <div class="field"><label>Exercise Name</label><input class="input" id="newExName" value="${esc(prefillName || "")}" placeholder="e.g. Pendlay Row" /></div>
+      <div style="font-size:16px;font-weight:700;margin-bottom:12px">${esc(t("createCustomTitle"))}</div>
+      <div class="field"><label>${esc(t("exName"))}</label><input class="input" id="newExName" value="${esc(prefillName || "")}" placeholder="${esc(t("exPlaceholder"))}" /></div>
       <div class="field">
-        <label>Muscle Group</label>
+        <label>${esc(t("muscleGroup"))}</label>
         <select id="newExMuscle">
-          ${MUSCLES.map(m => `<option value="${m}" ${m === prefillMuscle ? "selected" : ""}>${m}</option>`).join("")}
+          ${MUSCLES.map(m => `<option value="${m}" ${m === prefillMuscle ? "selected" : ""}>${esc(mLabel(m))}</option>`).join("")}
         </select>
       </div>
       <div class="grid-2" style="margin-top:12px">
-        <button class="btn btn-ghost" id="cancelNewEx">Cancel</button>
-        <button class="btn btn-primary" id="saveNewEx">Save & Add</button>
+        <button class="btn btn-ghost" id="cancelNewEx">${esc(t("cancel"))}</button>
+        <button class="btn btn-primary" id="saveNewEx">${esc(t("saveAndAdd"))}</button>
       </div>
     `);
     document.getElementById("cancelNewEx").onclick = closeModal;
@@ -1761,24 +1981,24 @@
 
   function openTemplatePicker() {
     openModal(`
-      <div style="font-size:16px;font-weight:700;margin-bottom:10px">Load Template</div>
+      <div style="font-size:16px;font-weight:700;margin-bottom:10px">${esc(t("loadTplTitle"))}</div>
       <div class="hairline-list">
-        ${state.templates.map(t => `
-          <div class="hairline-row" data-start-tpl="${t.id}">
+        ${state.templates.map(tp => `
+          <div class="hairline-row" data-start-tpl="${tp.id}">
             <div>
-              <div style="font-weight:600">${esc(t.name)}</div>
-              <div class="muted">${t.exercises.map(id => getExercise(id).name).join(" · ")}</div>
+              <div style="font-weight:600">${esc(tp.name)}</div>
+              <div class="muted">${tp.exercises.map(id => getExercise(id).name).join(" · ")}</div>
             </div>
-            <span class="btn btn-soft btn-xs">Start</span>
+            <span class="btn btn-soft btn-xs">${esc(t("start"))}</span>
           </div>
-        `).join("") || `<div class="empty-state">No templates yet. Create one in Library.</div>`}
+        `).join("") || `<div class="empty-state">${esc(t("noTplYet"))}</div>`}
       </div>
     `);
     modalContent.querySelectorAll("[data-start-tpl]").forEach(r => {
       r.onclick = () => {
-        const t = state.templates.find(x => x.id === r.dataset.startTpl);
+        const tp = state.templates.find(x => x.id === r.dataset.startTpl);
         closeModal();
-        if (t) startNewSession(t.name, t.exercises);
+        if (tp) startNewSession(tp.name, tp.exercises);
       };
     });
   }
@@ -1786,18 +2006,18 @@
   function openRecentModal() {
     const recents = state.workouts.slice(-10).reverse();
     openModal(`
-      <div style="font-size:16px;font-weight:700;margin-bottom:10px">Recent Sessions</div>
+      <div style="font-size:16px;font-weight:700;margin-bottom:10px">${esc(t("recentSessions"))}</div>
       <div class="hairline-list">
         ${recents.map(w => {
           const m = workoutMetrics(w.exercises);
           return `<div class="hairline-row" data-repeat-wk="${w.id}">
             <div>
               <div style="font-weight:600">${esc(w.name)}</div>
-              <div class="muted">${formatDateNice(w.date)} · ${m.workingSets} sets · ${formatVol(m.vol)}</div>
+              <div class="muted">${formatDateNice(w.date)} · ${m.workingSets} ${t("setPlural")} · ${formatVol(m.vol)}</div>
             </div>
-            <span class="btn btn-soft btn-xs">Repeat</span>
+            <span class="btn btn-soft btn-xs">${esc(t("repeat"))}</span>
           </div>`;
-        }).join("") || `<div class="empty-state">No past workouts logged yet.</div>`}
+        }).join("") || `<div class="empty-state">${esc(t("noPastWorkouts"))}</div>`}
       </div>
     `);
     modalContent.querySelectorAll("[data-repeat-wk]").forEach(r => {
@@ -1809,13 +2029,305 @@
     });
   }
 
+  
+  /* ==================== BODYWEIGHT 7-DAY AVERAGE & INTERACTIVE HEATMAP ==================== */
+  function getBodyweightSeries() {
+    const sorted = (state.bodyweights || []).slice().sort((a, b) => a.date.localeCompare(b.date));
+    return sorted.map((entry, idx) => {
+      const curDate = new Date(entry.date + "T00:00:00").getTime();
+      const win = sorted.filter(x => {
+        const dt = new Date(x.date + "T00:00:00").getTime();
+        return dt <= curDate && dt >= curDate - 6 * 86400000;
+      });
+      const avgKg = win.reduce((s, x) => s + x.kg, 0) / Math.max(1, win.length);
+      return { date: entry.date, kg: entry.kg, avgKg };
+    });
+  }
+
+  function logBodyweightEntry(dispVal) {
+    const n = parseFloat(dispVal);
+    if (isNaN(n) || n <= 0) return;
+    const kg = Math.round(fromDisplayW(n) * 100) / 100;
+    const td = todayStr();
+    state.bodyweights = state.bodyweights || [];
+    const idx = state.bodyweights.findIndex(x => x.date === td);
+    if (idx >= 0) state.bodyweights[idx].kg = kg;
+    else state.bodyweights.push({ date: td, kg });
+    state.bodyweights.sort((a, b) => a.date.localeCompare(b.date));
+    saveState();
+    renderStats();
+    showPRToast(t("bwLogged"));
+  }
+
+  function openBodyweightHistoryModal() {
+    const list = (state.bodyweights || []).slice().reverse();
+    const unit = state.settings.unit;
+    openModal(`
+      <div class="row-between" style="margin-bottom:10px">
+        <div style="font-size:16px;font-weight:700">${esc(t("bodyweight"))} · ${esc(t("bwHistory"))}</div>
+        <button class="text-link" id="closeBwHist">${esc(t("close"))}</button>
+      </div>
+      <div class="hairline-list" style="max-height:55vh;overflow-y:auto">
+        ${list.map(x => `
+          <div class="hairline-row" style="cursor:default">
+            <div>
+              <div class="mono" style="font-weight:700">${toDisplayW(x.kg)} ${unit}</div>
+              <div class="muted">${formatDateNice(x.date)}</div>
+            </div>
+            <button class="icon-btn" style="width:30px;height:30px;color:var(--muted)" data-del-bw="${x.date}">
+              <svg class="ic ic-sm" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg>
+            </button>
+          </div>
+        `).join("") || `<div class="empty-state">${esc(t("noBwYet"))}</div>`}
+      </div>
+    `);
+    modalContent.querySelector("#closeBwHist").onclick = closeModal;
+    modalContent.querySelectorAll("[data-del-bw]").forEach(btn => {
+      btn.onclick = () => {
+        state.bodyweights = (state.bodyweights || []).filter(x => x.date !== btn.dataset.delBw);
+        saveState();
+        renderStats();
+        openBodyweightHistoryModal();
+      };
+    });
+  }
+
+  function openDayHistoryModal(dateStr) {
+    const dayWorkouts = state.workouts.filter(w => w.date === dateStr);
+    if (!dayWorkouts.length) return;
+    const unit = state.settings.unit;
+
+    modalContent.innerHTML = `
+      <div class="row-between" style="margin-bottom:12px">
+        <div>
+          <div style="font-size:17px;font-weight:700">${formatDateNice(dateStr)}</div>
+          <div class="muted">${dayWorkouts.length} ${esc(t("sessions"))}</div>
+        </div>
+        <button class="text-link" id="closeDayHist">${esc(t("close"))}</button>
+      </div>
+      <div style="max-height:66vh;overflow-y:auto">
+        ${dayWorkouts.map(w => {
+          const m = workoutMetrics(w.exercises);
+          return `
+            <div class="card" style="margin-bottom:12px">
+              <div class="row-between" style="margin-bottom:8px">
+                <div>
+                  <div style="font-weight:700;font-size:15px">${esc(w.name || t("workout"))}</div>
+                  <div class="muted">${formatDuration(w.durationSec || 0)} · ${m.workingSets} ${t("setPlural")} · ${formatVol(m.vol)}</div>
+                </div>
+                <div class="row" style="gap:6px">
+                  <button class="btn btn-soft btn-xs" data-hm-repeat="${w.id}">${esc(t("repeat"))}</button>
+                  <button class="btn btn-danger btn-xs" data-hm-del="${w.id}">${esc(t("delete"))}</button>
+                </div>
+              </div>
+              ${w.exercises.map((ex, exI) => {
+                const info = getExercise(ex.exId);
+                return `
+                  <div style="margin-top:8px;padding-top:8px;border-top:1px solid var(--border)">
+                    <div style="font-weight:600;margin-bottom:4px">${esc(info.name)} <span class="muted" style="font-weight:500">· ${esc(mLabel(info.muscle))}</span></div>
+                    ${ex.sets.map((s, sI) => `
+                      <div class="logged-set-row" data-hm-edit="${w.id}:${exI}:${sI}">
+                        <div class="row" style="gap:6px">
+                          <span class="mono muted" style="width:22px">#${sI + 1}</span>
+                          ${s.tag ? `<span class="badge badge-${s.tag.toLowerCase()}">${s.tag}</span>` : ""}
+                          <span class="mono" style="font-weight:700">${toDisplayW(s.kg)} ${unit} × ${s.reps}</span>
+                        </div>
+                        <span class="muted" style="font-size:11px">${esc(t("edit"))}</span>
+                      </div>
+                    `).join("")}
+                  </div>
+                `;
+              }).join("")}
+            </div>
+          `;
+        }).join("")}
+      </div>
+    `;
+    modalBackdrop.classList.add("open");
+    modalContent.querySelector("#closeDayHist").onclick = closeModal;
+
+    modalContent.querySelectorAll("[data-hm-repeat]").forEach(btn => {
+      btn.onclick = () => {
+        const w = state.workouts.find(x => x.id === btn.dataset.hmRepeat);
+        closeModal();
+        if (w) startNewSession(w.name, w.exercises.map(e => e.exId));
+      };
+    });
+
+    modalContent.querySelectorAll("[data-hm-del]").forEach(btn => {
+      btn.onclick = () => {
+        const wid = btn.dataset.hmDel;
+        openModal(`
+          <div style="font-size:16px;font-weight:700;margin-bottom:8px">${esc(t("deleteSession"))}</div>
+          <div class="muted" style="margin-bottom:16px">${esc(t("deleteSessionQ"))}</div>
+          <div class="grid-2">
+            <button class="btn btn-ghost" id="cDelW">${esc(t("cancel"))}</button>
+            <button class="btn btn-danger" id="yDelW">${esc(t("delete"))}</button>
+          </div>
+        `);
+        document.getElementById("cDelW").onclick = () => openDayHistoryModal(dateStr);
+        document.getElementById("yDelW").onclick = () => {
+          state.workouts = state.workouts.filter(x => x.id !== wid);
+          saveState();
+          renderAll();
+          if (state.workouts.some(x => x.date === dateStr)) openDayHistoryModal(dateStr);
+          else closeModal();
+        };
+      };
+    });
+
+    modalContent.querySelectorAll("[data-hm-edit]").forEach(row => {
+      row.onclick = () => {
+        const [wid, exIS, sIS] = row.dataset.hmEdit.split(":");
+        const w = state.workouts.find(x => x.id === wid);
+        if (!w) return;
+        const ex = w.exercises[Number(exIS)];
+        const sI = Number(sIS);
+        const s = ex.sets[sI];
+        let editTag = s.tag || "";
+        openModal(`
+          <div style="font-size:16px;font-weight:700;margin-bottom:12px">${esc(getExercise(ex.exId).name)} · #${sI + 1}</div>
+          <div class="field">
+            <label>${esc(t("tag"))}</label>
+            <div class="tag-pills">
+              ${["W","D","F"].map(tg => `<button class="tag-pill ${editTag === tg ? "active-"+tg : ""}" data-hetag="${tg}">${tg}</button>`).join("")}
+            </div>
+          </div>
+          <div class="grid-2">
+            <div class="field"><label>${esc(t("weight"))} (${unit})</label><input type="number" step="any" class="input mono" id="hEditW" value="${toDisplayW(s.kg)}" /></div>
+            <div class="field"><label>${esc(t("reps"))}</label><input type="number" class="input mono" id="hEditR" value="${s.reps}" /></div>
+          </div>
+          <div class="grid-2" style="margin-top:8px">
+            <button class="btn btn-danger" id="hDelSet">${esc(t("delete"))}</button>
+            <button class="btn btn-primary" id="hSaveSet">${esc(t("save"))}</button>
+          </div>
+        `);
+        modalContent.querySelectorAll("[data-hetag]").forEach(b => {
+          b.onclick = () => {
+            editTag = editTag === b.dataset.hetag ? "" : b.dataset.hetag;
+            modalContent.querySelectorAll("[data-hetag]").forEach(x => {
+              x.className = "tag-pill" + (editTag === x.dataset.hetag ? " active-" + x.dataset.hetag : "");
+            });
+          };
+        });
+        document.getElementById("hDelSet").onclick = () => {
+          ex.sets.splice(sI, 1);
+          if (!ex.sets.length) w.exercises.splice(Number(exIS), 1);
+          if (!w.exercises.length) state.workouts = state.workouts.filter(x => x.id !== wid);
+          saveState();
+          renderAll();
+          if (state.workouts.some(x => x.date === dateStr)) openDayHistoryModal(dateStr);
+          else closeModal();
+        };
+        document.getElementById("hSaveSet").onclick = () => {
+          s.kg = fromDisplayW(document.getElementById("hEditW").value);
+          s.reps = Math.max(1, parseInt(document.getElementById("hEditR").value, 10) || 1);
+          s.tag = editTag;
+          saveState();
+          renderAll();
+          openDayHistoryModal(dateStr);
+        };
+      };
+    });
+  }
+
+  function buildBodyweightCardHtml() {
+    const unit = state.settings.unit;
+    const series = getBodyweightSeries().slice(-30);
+    const latest = series.length ? series[series.length - 1] : null;
+    let chartHtml = `<div class="empty-state" style="padding:14px 0">${esc(t("noBwYet"))}</div>`;
+
+    if (series.length) {
+      const rawVals = series.map(p => toDisplayW(p.kg));
+      const avgVals = series.map(p => toDisplayW(p.avgKg));
+      const allV = rawVals.concat(avgVals);
+      const minV = Math.min(...allV) - 0.8;
+      const maxV = Math.max(...allV) + 0.8;
+      const W = 320, H = 110, pad = 14;
+      const mapX = i => series.length === 1 ? W / 2 : pad + (i / (series.length - 1)) * (W - pad * 2);
+      const mapY = v => H - pad - ((v - minV) / Math.max(0.5, maxV - minV)) * (H - pad * 2);
+      const avgPoly = avgVals.map((v, i) => `${mapX(i).toFixed(1)},${mapY(v).toFixed(1)}`).join(" ");
+      chartHtml = `
+        <svg viewBox="0 0 ${W} ${H}" style="width:100%;height:115px;display:block;background:var(--card-2);border-radius:10px;border:1px solid var(--border);margin-top:6px">
+          <polyline fill="none" stroke="var(--accent)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" points="${avgPoly}"/>
+          ${rawVals.map((v, i) => `<circle cx="${mapX(i).toFixed(1)}" cy="${mapY(v).toFixed(1)}" r="2.8" fill="var(--text)" opacity="0.45"><title>${series[i].date}: ${v} ${unit}</title></circle>`).join("")}
+          <text x="8" y="14" fill="var(--muted)" font-size="9.5" font-family="var(--font-mono)">${(Math.round(maxV*10)/10)} ${unit}</text>
+          <text x="8" y="${H - 5}" fill="var(--muted)" font-size="9.5" font-family="var(--font-mono)">${(Math.round(minV*10)/10)} ${unit}</text>
+        </svg>
+      `;
+    }
+
+    return `
+      <div class="card">
+        <div class="row-between">
+          <div class="section-title" style="margin:0">${esc(t("bodyweight"))} · ${esc(t("avg7d"))}</div>
+          <button class="text-link" id="openBwHistBtn" style="padding:0;font-size:11.5px">${esc(t("bwHistory"))}</button>
+        </div>
+        ${latest ? `
+          <div class="bw-stat-pills">
+            <div class="bw-stat-box">
+              <div class="muted" style="font-size:10.5px">${esc(t("latest"))}</div>
+              <div class="mono" style="font-size:16px;font-weight:700">${toDisplayW(latest.kg)} ${unit}</div>
+            </div>
+            <div class="bw-stat-box">
+              <div class="muted" style="font-size:10.5px">${esc(t("avg7d"))}</div>
+              <div class="mono" style="font-size:16px;font-weight:700;color:var(--accent)">${toDisplayW(latest.avgKg)} ${unit}</div>
+            </div>
+          </div>
+        ` : ""}
+        ${chartHtml}
+        <div class="bw-input-row">
+          <input type="number" step="0.1" inputmode="decimal" class="input" id="bwQuickInp" placeholder="${esc(t("bwPlaceholder"))} (${unit})" value="${latest ? toDisplayW(latest.kg) : ""}" />
+          <button class="btn btn-primary btn-sm" id="bwQuickBtn">${esc(t("logBw"))}</button>
+        </div>
+      </div>
+    `;
+  }
+
+  function exportWorkoutsCSV() {
+    if (!state.workouts.length) {
+      showPRToast(t("noWorkoutsCsv"));
+      return;
+    }
+    const unit = state.settings.unit;
+    const csvEsc = v => '"' + String(v === undefined || v === null ? "" : v).replace(/"/g, '""') + '"';
+    const rows = [["Date", "Workout", "Exercise", "Category", "Set", "Weight", "Weight Unit", "Reps", "Tag"].join(",")];
+    state.workouts.forEach(w => {
+      (w.exercises || []).forEach(ex => {
+        const info = getExercise(ex.exId);
+        (ex.sets || []).forEach((s, idx) => {
+          rows.push([
+            csvEsc(w.date),
+            csvEsc(w.name || "Session"),
+            csvEsc(info.name),
+            csvEsc(info.muscle),
+            idx + 1,
+            toDisplayW(s.kg),
+            csvEsc(unit),
+            s.reps,
+            csvEsc(s.tag || "")
+          ].join(","));
+        });
+      });
+    });
+    const csvText = rows.join("\n");
+    const blob = new Blob([csvText], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `barstats-log-${todayStr()}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showPRToast(t("csvExported"));
+  }
+
   /* ==================== RENDER STATS PAGE ==================== */
   function getTimeframeBounds() {
-    const t = todayStr();
-    if (statsMode === "today") return { from: t, to: t };
-    if (statsMode === "week") return { from: daysAgoStr(6), to: t };
-    if (statsMode === "month") return { from: daysAgoStr(29), to: t };
-    return { from: statsFrom || daysAgoStr(30), to: statsTo || t };
+    const td = todayStr();
+    if (statsMode === "today") return { from: td, to: td };
+    if (statsMode === "week") return { from: daysAgoStr(6), to: td };
+    if (statsMode === "month") return { from: daysAgoStr(29), to: td };
+    return { from: statsFrom || daysAgoStr(30), to: statsTo || td };
   }
 
   function renderStats() {
@@ -1839,7 +2351,6 @@
       });
     });
 
-    // Actionable callout
     let calloutHtml = "";
     if (state.settings.callouts && !calloutDismissed && state.workouts.length) {
       const lastDate = state.workouts[state.workouts.length - 1].date;
@@ -1848,8 +2359,8 @@
         return !recent7.some(w => w.exercises.some(e => getExercise(e.exId).muscle === m));
       });
       const msg = untouched
-        ? `${untouched} hasn't been trained in the last 7 days.`
-        : `Last session logged ${formatDateNice(lastDate)} · ${state.workouts.length} total workouts tracked.`;
+        ? t("calloutUntouched", { m: mLabel(untouched) })
+        : t("calloutLast", { d: formatDateNice(lastDate), n: state.workouts.length });
       calloutHtml = `
         <div class="callout-bar">
           <span>${esc(msg)}</span>
@@ -1857,7 +2368,6 @@
         </div>`;
     }
 
-    // 12-Week Consistency Heatmap (84 days)
     const volByDay = {};
     let maxDayVol = 1;
     state.workouts.forEach(w => {
@@ -1886,8 +2396,8 @@
       hmCols.push(`<div class="hm-col">${colCells}</div>`);
     }
 
-    // Adaptive Volume Trend Bars
     let trendBuckets = [];
+    const loc = state.settings.lang === "hi" ? "hi-IN" : undefined;
     if (statsMode === "today") {
       const exMap = {};
       filtered.forEach(w => w.exercises.forEach(e => {
@@ -1900,7 +2410,7 @@
       for (let i = 6; i >= 0; i--) {
         const dStr = daysAgoStr(i);
         const [y,m,d] = dStr.split("-").map(Number);
-        const lbl = new Date(y, m-1, d).toLocaleDateString(undefined, { weekday: "narrow" });
+        const lbl = new Date(y, m-1, d).toLocaleDateString(loc, { weekday: "narrow" });
         trendBuckets.push({ lbl, val: volByDay[dStr] || 0 });
       }
     } else if (statsMode === "month") {
@@ -1910,7 +2420,6 @@
         trendBuckets.push({ lbl: "W" + (5 - w), val: sum });
       }
     } else {
-      // Range: split into up to 7 buckets
       const d1 = new Date(from + "T00:00:00"), d2 = new Date(to + "T00:00:00");
       const span = Math.max(1, Math.round((d2 - d1) / 86400000) + 1);
       const count = Math.min(7, span);
@@ -1926,21 +2435,19 @@
     }
     const maxTrend = Math.max(1, ...trendBuckets.map(b => b.val));
 
-    // Muscle Working Sets
     const maxMuscle = Math.max(1, ...Object.values(muscleSets));
     const muscleHtml = MUSCLES.map(m => {
       const cnt = muscleSets[m] || 0;
       const pct = Math.round((cnt / maxMuscle) * 100);
       return `<div class="cat-bar-row">
         <div class="row-between" style="font-size:12.5px">
-          <span style="font-weight:600">${m}</span>
-          <span class="mono muted">${cnt} sets</span>
+          <span style="font-weight:600">${esc(mLabel(m))}</span>
+          <span class="mono muted">${cnt} ${esc(t("setPlural"))}</span>
         </div>
         <div class="progress-track"><div class="progress-fill" style="width:${cnt ? Math.max(4, pct) : 0}%"></div></div>
       </div>`;
     }).join("");
 
-    // Tracked Lifts PR List + 30-day Est. 1RM Delta
     const d30 = daysAgoStr(30);
     const trackedIds = [...new Set(filtered.flatMap(w => w.exercises.map(e => e.exId)))];
     const prListHtml = trackedIds.map(exId => {
@@ -1964,7 +2471,7 @@
       return `<div class="hairline-row" data-drill-ex="${exId}">
         <div>
           <div style="font-weight:600">${esc(info.name)}</div>
-          <div class="muted">${esc(info.muscle)}</div>
+          <div class="muted">${esc(mLabel(info.muscle))}</div>
         </div>
         <div class="row" style="gap:8px">
           ${deltaBadge}
@@ -1975,10 +2482,10 @@
 
     el.innerHTML = `
       <div class="seg-ctrl cols-4">
-        <button class="seg-btn ${statsMode==="today"?"active":""}" data-sm="today">Today</button>
-        <button class="seg-btn ${statsMode==="week"?"active":""}" data-sm="week">Week</button>
-        <button class="seg-btn ${statsMode==="month"?"active":""}" data-sm="month">Month</button>
-        <button class="seg-btn ${statsMode==="range"?"active":""}" data-sm="range">Range</button>
+        <button class="seg-btn ${statsMode==="today"?"active":""}" data-sm="today">${esc(t("today"))}</button>
+        <button class="seg-btn ${statsMode==="week"?"active":""}" data-sm="week">${esc(t("week"))}</button>
+        <button class="seg-btn ${statsMode==="month"?"active":""}" data-sm="month">${esc(t("month"))}</button>
+        <button class="seg-btn ${statsMode==="range"?"active":""}" data-sm="range">${esc(t("range"))}</button>
       </div>
 
       ${statsMode === "range" ? `
@@ -1987,34 +2494,36 @@
           <input type="date" class="input mono" id="rangeTo" value="${esc(statsTo)}" />
         </div>
         <div class="row" style="margin-bottom:12px">
-          <button class="btn btn-ghost btn-xs" id="range30Btn">Last 30d</button>
-          <button class="btn btn-ghost btn-xs" id="rangeAllBtn">All Time</button>
+          <button class="btn btn-ghost btn-xs" id="range30Btn">${esc(t("last30d"))}</button>
+          <button class="btn btn-ghost btn-xs" id="rangeAllBtn">${esc(t("allTime"))}</button>
         </div>
       ` : ""}
 
       ${calloutHtml}
 
       <div class="snapshot-bar">
-        <div class="snap-cell"><div class="snap-val mono">${filtered.length}</div><div class="snap-lbl">Sessions</div></div>
-        <div class="snap-cell"><div class="snap-val mono">${totalSets}</div><div class="snap-lbl">Work Sets</div></div>
-        <div class="snap-cell"><div class="snap-val mono">${formatVol(totalVol)}</div><div class="snap-lbl">Volume</div></div>
+        <div class="snap-cell"><div class="snap-val mono">${filtered.length}</div><div class="snap-lbl">${esc(t("sessions"))}</div></div>
+        <div class="snap-cell"><div class="snap-val mono">${totalSets}</div><div class="snap-lbl">${esc(t("workSets"))}</div></div>
+        <div class="snap-cell"><div class="snap-val mono">${formatVol(totalVol)}</div><div class="snap-lbl">${esc(t("volume"))}</div></div>
       </div>
 
       <div class="card">
         <div class="row-between">
-          <div class="section-title" style="margin:0">12-Week Consistency</div>
-          <div class="muted mono">${activeDays84} active days</div>
+          <div class="section-title" style="margin:0">${esc(t("consistency"))}</div>
+          <div class="muted mono">${activeDays84} ${esc(t("activeDays"))}</div>
         </div>
         <div class="heatmap-wrap">${hmCols.join("")}</div>
-        ${selectedHeatmapDay ? `
-          <div class="muted" style="margin-top:8px;font-size:11.5px">
-            ${formatDateNice(selectedHeatmapDay)} · ${volByDay[selectedHeatmapDay] ? formatVol(volByDay[selectedHeatmapDay]) : "Rest day"}
-          </div>
-        ` : ""}
+        <div class="muted" style="margin-top:8px;font-size:11.5px">
+          ${selectedHeatmapDay
+            ? `${formatDateNice(selectedHeatmapDay)} · ${volByDay[selectedHeatmapDay] ? formatVol(volByDay[selectedHeatmapDay]) : esc(t("restDay"))}`
+            : esc(t("tapTileInspect"))}
+        </div>
       </div>
 
+      ${buildBodyweightCardHtml()}
+
       <div class="card">
-        <div class="section-title" style="margin-bottom:4px">Volume Trend</div>
+        <div class="section-title" style="margin-bottom:4px">${esc(t("volumeTrend"))}</div>
         ${trendBuckets.length ? `
           <div class="trend-bars">
             ${trendBuckets.map(b => `
@@ -2024,20 +2533,20 @@
               </div>
             `).join("")}
           </div>
-        ` : `<div class="empty-state" style="padding:16px 0">No volume logged in this timeframe.</div>`}
+        ` : `<div class="empty-state" style="padding:16px 0">${esc(t("noVolFrame"))}</div>`}
       </div>
 
       <div class="card">
-        <div class="section-title" style="margin-bottom:10px">Working Sets by Muscle</div>
+        <div class="section-title" style="margin-bottom:10px">${esc(t("workingSetsMuscle"))}</div>
         ${muscleHtml}
       </div>
 
       <div class="section-head">
-        <div class="section-title">Tracked Lifts (Est. 1RM)</div>
-        <span class="muted">Tap for chart</span>
+        <div class="section-title">${esc(t("trackedLifts"))}</div>
+        <span class="muted">${esc(t("tapForChart"))}</span>
       </div>
       <div class="hairline-list">
-        ${prListHtml || `<div class="empty-state">Log a session to see Est. 1RM progression and Rep-Max tables.</div>`}
+        ${prListHtml || `<div class="empty-state">${esc(t("logForStats"))}</div>`}
       </div>
     `;
 
@@ -2057,8 +2566,21 @@
     if (dc) dc.onclick = () => { calloutDismissed = true; renderStats(); };
 
     el.querySelectorAll("[data-hm-day]").forEach(c => {
-      c.onclick = () => { selectedHeatmapDay = c.dataset.hmDay; renderStats(); };
+      c.onclick = () => {
+        const d = c.dataset.hmDay;
+        selectedHeatmapDay = d;
+        if (state.workouts.some(w => w.date === d)) {
+          openDayHistoryModal(d);
+        } else {
+          renderStats();
+        }
+      };
     });
+    const bwBtn = el.querySelector("#bwQuickBtn");
+    const bwInp = el.querySelector("#bwQuickInp");
+    if (bwBtn && bwInp) bwBtn.onclick = () => logBodyweightEntry(bwInp.value);
+    const bwHist = el.querySelector("#openBwHistBtn");
+    if (bwHist) bwHist.onclick = openBodyweightHistoryModal;
     el.querySelectorAll("[data-drill-ex]").forEach(r => {
       r.onclick = () => openLiftDrilldown(r.dataset.drillEx);
     });
@@ -2067,7 +2589,7 @@
   /* ==================== LIFT DRILLDOWN (SVG CHART + REP-MAX TABLE) ==================== */
   function openLiftDrilldown(exId) {
     const info = getExercise(exId);
-    let chartMode = "1rm"; // 1rm | vol
+    let chartMode = "1rm";
 
     const points = [];
     const repMax = { 1: 0, 3: 0, 5: 0, 8: 0, 10: 0 };
@@ -2089,7 +2611,7 @@
 
     function renderDrill() {
       const unit = state.settings.unit;
-      let svgHtml = `<div class="empty-state">Log at least 1 working set to view progression.</div>`;
+      let svgHtml = `<div class="empty-state">${esc(t("logForProg"))}</div>`;
       if (points.length) {
         const vals = points.map(p => chartMode === "1rm" ? toDisplayW(p.rm) : Math.round(toDisplayW(p.vol)));
         const minV = Math.min(...vals) * 0.92;
@@ -2115,16 +2637,16 @@
         <div class="row-between" style="margin-bottom:12px">
           <div>
             <div style="font-size:17px;font-weight:700">${esc(info.name)}</div>
-            <div class="muted">${esc(info.muscle)} · ${points.length} session${points.length===1?"":"s"}</div>
+            <div class="muted">${esc(mLabel(info.muscle))} · ${points.length} ${esc(t("sessions"))}</div>
           </div>
-          <button class="text-link" id="closeDrillBtn">Close</button>
+          <button class="text-link" id="closeDrillBtn">${esc(t("close"))}</button>
         </div>
         <div class="seg-ctrl">
-          <button class="seg-btn ${chartMode==="1rm"?"active":""}" data-cm="1rm">Est. 1RM</button>
-          <button class="seg-btn ${chartMode==="vol"?"active":""}" data-cm="vol">Session Volume</button>
+          <button class="seg-btn ${chartMode==="1rm"?"active":""}" data-cm="1rm">${esc(t("est1rm"))}</button>
+          <button class="seg-btn ${chartMode==="vol"?"active":""}" data-cm="vol">${esc(t("sessionVol"))}</button>
         </div>
         ${svgHtml}
-        <div class="section-title" style="margin-top:14px">Rep-Max Best (${unit})</div>
+        <div class="section-title" style="margin-top:14px">${esc(t("repMaxBest"))} (${unit})</div>
         <div class="rm-grid">
           ${[1,3,5,8,10].map(r => `
             <div class="rm-cell">
@@ -2151,55 +2673,55 @@
     if (libTab === "exercises") {
       const list = state.exercises.filter(e => {
         const mOk = libMuscle === "All" || e.muscle === libMuscle;
-        const qOk = !libSearch || e.name.toLowerCase().includes(libSearch.toLowerCase());
+        const qOk = !libSearch || e.name.toLowerCase().includes(libSearch.toLowerCase()) || mLabel(e.muscle).includes(libSearch);
         return mOk && qOk;
       });
       contentHtml = `
         <div class="row" style="margin-bottom:10px">
-          <input class="input" id="libSearchInp" placeholder="Search exercises..." value="${esc(libSearch)}" />
-          <button class="btn btn-primary btn-sm" id="libNewExBtn">+ New</button>
+          <input class="input" id="libSearchInp" placeholder="${esc(t("searchEx"))}" value="${esc(libSearch)}" />
+          <button class="btn btn-primary btn-sm" id="libNewExBtn">${esc(t("newBtn"))}</button>
         </div>
         <div class="chip-row">
-          ${["All", ...MUSCLES].map(m => `<button class="chip ${libMuscle===m?"active":""}" data-lm="${m}">${m}</button>`).join("")}
+          ${["All", ...MUSCLES].map(m => `<button class="chip ${libMuscle===m?"active":""}" data-lm="${m}">${esc(mLabel(m))}</button>`).join("")}
         </div>
         <div class="hairline-list">
           ${list.map(e => `
             <div class="hairline-row" data-lib-ex="${e.id}">
               <div>
                 <div style="font-weight:600">${esc(e.name)}</div>
-                <div class="muted">${esc(e.muscle)}${e.custom ? " · Custom" : ""}</div>
+                <div class="muted">${esc(mLabel(e.muscle))}${e.custom ? " · " + esc(t("custom")) : ""}</div>
               </div>
               <svg class="ic ic-sm" style="color:var(--muted)" viewBox="0 0 24 24"><path d="M9 18l6-6-6-6"/></svg>
             </div>
-          `).join("") || `<div class="empty-state">No exercises found.</div>`}
+          `).join("") || `<div class="empty-state">${esc(t("noExFound"))}</div>`}
         </div>
       `;
     } else {
       contentHtml = `
-        <button class="btn btn-soft btn-full" style="margin-bottom:14px" id="newTplBtn">+ New Template</button>
+        <button class="btn btn-soft btn-full" style="margin-bottom:14px" id="newTplBtn">${esc(t("newTplBtn"))}</button>
         <div class="hairline-list">
-          ${state.templates.map(t => `
+          ${state.templates.map(tp => `
             <div class="hairline-row">
-              <div style="min-width:0;flex:1" data-run-tpl="${t.id}">
-                <div style="font-weight:700">${esc(t.name)}</div>
-                <div class="muted" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${t.exercises.map(id => getExercise(id).name).join(" · ")}</div>
+              <div style="min-width:0;flex:1" data-run-tpl="${tp.id}">
+                <div style="font-weight:700">${esc(tp.name)}</div>
+                <div class="muted" style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${tp.exercises.map(id => getExercise(id).name).join(" · ")}</div>
               </div>
               <div class="row" style="gap:6px">
-                <button class="btn btn-primary btn-xs" data-run-tpl="${t.id}">Start</button>
-                <button class="icon-btn" style="width:30px;height:30px;color:var(--muted)" data-del-tpl="${t.id}">
+                <button class="btn btn-primary btn-xs" data-run-tpl="${tp.id}">${esc(t("start"))}</button>
+                <button class="icon-btn" style="width:30px;height:30px;color:var(--muted)" data-del-tpl="${tp.id}">
                   <svg class="ic ic-sm" viewBox="0 0 24 24"><path d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"/></svg>
                 </button>
               </div>
             </div>
-          `).join("") || `<div class="empty-state">No templates yet.</div>`}
+          `).join("") || `<div class="empty-state">${esc(t("noTplYet"))}</div>`}
         </div>
       `;
     }
 
     el.innerHTML = `
       <div class="seg-ctrl">
-        <button class="seg-btn ${libTab==="exercises"?"active":""}" data-lt="exercises">Exercises</button>
-        <button class="seg-btn ${libTab==="templates"?"active":""}" data-lt="templates">Templates</button>
+        <button class="seg-btn ${libTab==="exercises"?"active":""}" data-lt="exercises">${esc(t("exercises"))}</button>
+        <button class="seg-btn ${libTab==="templates"?"active":""}" data-lt="templates">${esc(t("templates"))}</button>
       </div>
       ${contentHtml}
     `;
@@ -2221,8 +2743,8 @@
       el.querySelector("#newTplBtn").onclick = openNewTemplateModal;
       el.querySelectorAll("[data-run-tpl]").forEach(b => {
         b.onclick = () => {
-          const t = state.templates.find(x => x.id === b.dataset.runTpl);
-          if (t) startNewSession(t.name, t.exercises);
+          const tp = state.templates.find(x => x.id === b.dataset.runTpl);
+          if (tp) startNewSession(tp.name, tp.exercises);
         };
       });
       el.querySelectorAll("[data-del-tpl]").forEach(b => {
@@ -2240,23 +2762,23 @@
     let picked = [];
     function renderM() {
       modalContent.innerHTML = `
-        <div style="font-size:16px;font-weight:700;margin-bottom:10px">New Workout Template</div>
-        <div class="field"><label>Template Name</label><input class="input" id="tplNameInp" value="${esc(tplName)}" placeholder="e.g. Upper Body A" /></div>
+        <div style="font-size:16px;font-weight:700;margin-bottom:10px">${esc(t("newTplTitle"))}</div>
+        <div class="field"><label>${esc(t("tplName"))}</label><input class="input" id="tplNameInp" value="${esc(tplName)}" placeholder="${esc(t("tplPlaceholder"))}" /></div>
         <div class="field">
-          <label>Select Exercises (${picked.length})</label>
+          <label>${esc(t("selectEx"))} (${picked.length})</label>
           <div class="hairline-list" style="max-height:38vh;overflow-y:auto">
             ${state.exercises.map(e => {
               const on = picked.includes(e.id);
               return `<div class="hairline-row" data-tp-ex="${e.id}">
-                <div><div style="font-weight:600">${esc(e.name)}</div><div class="muted">${esc(e.muscle)}</div></div>
+                <div><div style="font-weight:600">${esc(e.name)}</div><div class="muted">${esc(mLabel(e.muscle))}</div></div>
                 <span class="badge ${on ? "badge-up" : ""}" style="${on ? "" : "color:var(--muted)"}">${on ? "✓" : "+"}</span>
               </div>`;
             }).join("")}
           </div>
         </div>
         <div class="grid-2" style="margin-top:10px">
-          <button class="btn btn-ghost" id="cancelTplBtn">Cancel</button>
-          <button class="btn btn-primary" id="saveTplBtn">Save</button>
+          <button class="btn btn-ghost" id="cancelTplBtn">${esc(t("cancel"))}</button>
+          <button class="btn btn-primary" id="saveTplBtn">${esc(t("save"))}</button>
         </div>
       `;
       modalContent.querySelector("#tplNameInp").oninput = e => { tplName = e.target.value; };
@@ -2280,21 +2802,27 @@
     renderM();
   }
 
-  /* ==================== SETTINGS DRAWER (DOPAHAR APPEARANCE + REST SLIDER + JSON) ==================== */
+  /* ==================== SETTINGS DRAWER ==================== */
   const ACCENT_PRESETS = ["#3b82f6", "#10b981", "#f59e0b", "#ef4444", "#a855f7", "#ec4899", "#06b6d4", "#f97316"];
 
   function renderSettings() {
     const s = state.settings;
     const body = document.getElementById("settingsBody");
     body.innerHTML = `
-      <div class="section-title" style="margin-bottom:8px">Surface</div>
+      <div class="section-title" style="margin-bottom:8px">${esc(t("language"))}</div>
+      <div class="seg-ctrl" style="margin-bottom:16px">
+        <button class="seg-btn ${s.lang==="en"?"active":""}" data-set-lang="en">English</button>
+        <button class="seg-btn ${s.lang==="hi"?"active":""}" data-set-lang="hi">हिन्दी</button>
+      </div>
+
+      <div class="section-title" style="margin-bottom:8px">${esc(t("surface"))}</div>
       <div class="grid-3" style="margin-bottom:16px">
-        ${[["amoled","AMOLED"],["dark","Dark"],["light","Light"]].map(([v,lbl]) =>
-          `<button class="theme-btn ${s.surface===v?"active":""}" data-set-surf="${v}">${lbl}</button>`
+        ${[["amoled",t("amoled")],["dark",t("dark")],["light",t("light")]].map(([v,lbl]) =>
+          `<button class="theme-btn ${s.surface===v?"active":""}" data-set-surf="${v}">${esc(lbl)}</button>`
         ).join("")}
       </div>
 
-      <div class="section-title" style="margin-bottom:8px">Typography</div>
+      <div class="section-title" style="margin-bottom:8px">${esc(t("typography"))}</div>
       <div class="chip-row" style="margin-bottom:16px">
         ${[["inter","Inter"],["geist","Geist"],["jakarta","Jakarta"],["mono","Mono"],["system","System"]].map(([v,lbl]) =>
           `<button class="chip ${s.font===v?"active":""}" data-set-font="${v}">${lbl}</button>`
@@ -2302,7 +2830,7 @@
       </div>
 
       <div class="card">
-        <div class="section-title" style="margin-bottom:6px">Accent Color</div>
+        <div class="section-title" style="margin-bottom:6px">${esc(t("accentColor"))}</div>
         <div class="wheel-wrap">
           <canvas id="colorWheelCanvas" width="150" height="150"></canvas>
           <div class="preset-dots">
@@ -2316,9 +2844,9 @@
       </div>
 
       <div class="card">
-        <div class="section-title" style="margin-bottom:10px">Training</div>
+        <div class="section-title" style="margin-bottom:10px">${esc(t("training"))}</div>
         <div class="row-between" style="margin-bottom:14px">
-          <div><div style="font-weight:600">Weight Unit</div><div class="muted">Display and steppers</div></div>
+          <div><div style="font-weight:600">${esc(t("weightUnit"))}</div><div class="muted">${esc(t("weightUnitSub"))}</div></div>
           <div class="seg-ctrl" style="margin:0;width:116px">
             <button class="seg-btn ${s.unit==="kg"?"active":""}" data-set-unit="kg">kg</button>
             <button class="seg-btn ${s.unit==="lbs"?"active":""}" data-set-unit="lbs">lbs</button>
@@ -2327,7 +2855,7 @@
 
         <div style="margin-bottom:14px">
           <div class="row-between">
-            <span style="font-weight:600">Default Rest Timer</span>
+            <span style="font-weight:600">${esc(t("defaultRest"))}</span>
             <span class="mono" id="restSliderVal" style="font-weight:700;color:var(--accent)">${formatRest(s.restSec)}</span>
           </div>
           <input type="range" class="accent-slider" id="restSlider" min="5" max="300" step="5" value="${s.restSec}" />
@@ -2335,38 +2863,50 @@
         </div>
 
         <div class="row-between" style="margin-bottom:12px">
-          <div><div style="font-weight:600">Rest Chime Sound</div><div class="muted">Offline Web Audio tone at 0:00</div></div>
+          <div><div style="font-weight:600">${esc(t("restChime"))}</div><div class="muted">${esc(t("restChimeSub"))}</div></div>
           <div class="switch ${s.chime?"on":""}" data-toggle-s="chime"></div>
         </div>
         <div class="row-between" style="margin-bottom:12px">
-          <div><div style="font-weight:600">Exercise Animations</div><div class="muted">Minimal movement icons</div></div>
+          <div><div style="font-weight:600">${esc(t("exAnims"))}</div><div class="muted">${esc(t("exAnimsSub"))}</div></div>
           <div class="switch ${s.animations?"on":""}" data-toggle-s="animations"></div>
         </div>
         <div class="row-between">
-          <div><div style="font-weight:600">Performance Callouts</div><div class="muted">Actionable banner on Stats</div></div>
+          <div><div style="font-weight:600">${esc(t("perfCallouts"))}</div><div class="muted">${esc(t("perfCalloutsSub"))}</div></div>
           <div class="switch ${s.callouts?"on":""}" data-toggle-s="callouts"></div>
         </div>
       </div>
 
       <div class="card">
-        <div class="section-title" style="margin-bottom:10px">Local-First Data & Backup</div>
+        <div class="section-title" style="margin-bottom:10px">${esc(t("dataBackup"))}</div>
         <div class="grid-2" style="margin-bottom:8px">
-          <button class="btn btn-soft btn-sm" id="exportJsonBtn">Export JSON</button>
-          <button class="btn btn-ghost btn-sm" id="copyJsonBtn">Copy JSON</button>
+          <button class="btn btn-soft btn-sm" id="exportJsonBtn">${esc(t("exportJson"))}</button>
+          <button class="btn btn-soft btn-sm" id="exportCsvBtn">${esc(t("exportCsv"))}</button>
+        </div>
+        <div class="grid-2" style="margin-bottom:8px">
+          <button class="btn btn-ghost btn-sm" id="copyJsonBtn">${esc(t("copyJson"))}</button>
+          <button class="btn btn-ghost btn-sm" id="importFileBtn">${esc(t("importFile"))}</button>
         </div>
         <div class="grid-2" style="margin-bottom:10px">
-          <button class="btn btn-ghost btn-sm" id="importFileBtn">Import File</button>
-          <button class="btn btn-ghost btn-sm" id="pasteJsonBtn">Paste JSON</button>
+          <button class="btn btn-ghost btn-sm" id="pasteJsonBtn">${esc(t("pasteJson"))}</button>
+          <button class="btn btn-ghost btn-sm" id="seedDemoBtn">${esc(t("loadDemo"))}</button>
         </div>
-        <div class="grid-2">
-          <button class="btn btn-ghost btn-sm" id="seedDemoBtn">Load Demo Data</button>
-          <button class="btn btn-danger btn-sm" id="resetDataBtn">Reset All</button>
-        </div>
+        <button class="btn btn-danger btn-sm btn-full" id="resetDataBtn">${esc(t("resetAll"))}</button>
       </div>
+      <div class="brand-credit">${esc(t("byDiamond"))}</div>
     `;
 
     drawColorWheel();
 
+    body.querySelectorAll("[data-set-lang]").forEach(b => {
+      b.onclick = () => {
+        s.lang = b.dataset.setLang;
+        saveState();
+        applyTheme();
+        renderSettings();
+        renderAll();
+        if (state.activeWorkout) renderFocusBody();
+      };
+    });
     body.querySelectorAll("[data-set-surf]").forEach(b => {
       b.onclick = () => { s.surface = b.dataset.setSurf; saveState(); applyTheme(); renderSettings(); };
     });
@@ -2401,6 +2941,7 @@
       };
     });
 
+    body.querySelector("#exportCsvBtn").onclick = exportWorkoutsCSV;
     body.querySelector("#exportJsonBtn").onclick = () => {
       const blob = new Blob([JSON.stringify(state, null, 2)], { type: "application/json" });
       const url = URL.createObjectURL(blob);
@@ -2411,15 +2952,15 @@
     body.querySelector("#copyJsonBtn").onclick = async () => {
       try {
         await navigator.clipboard.writeText(JSON.stringify(state, null, 2));
-        showPRToast("Backup JSON copied");
-      } catch (e) { showPRToast("Copy failed"); }
+        showPRToast(t("toastCopied"));
+      } catch (e) { showPRToast(t("toastCopyFail")); }
     };
     body.querySelector("#importFileBtn").onclick = () => document.getElementById("jsonFileInput").click();
     body.querySelector("#pasteJsonBtn").onclick = () => {
       openModal(`
-        <div style="font-size:16px;font-weight:700;margin-bottom:8px">Paste Backup JSON</div>
+        <div style="font-size:16px;font-weight:700;margin-bottom:8px">${esc(t("pasteTitle"))}</div>
         <textarea class="input mono" id="pasteArea" rows="6" placeholder='{"settings":...}'></textarea>
-        <button class="btn btn-primary btn-full" style="margin-top:10px" id="doPasteBtn">Restore Backup</button>
+        <button class="btn btn-primary btn-full" style="margin-top:10px" id="doPasteBtn">${esc(t("restoreBackup"))}</button>
       `);
       document.getElementById("doPasteBtn").onclick = () => {
         importJsonString(document.getElementById("pasteArea").value);
@@ -2430,20 +2971,21 @@
       seedDemoHistory();
       saveState();
       renderAll();
-      showPRToast("Sample history loaded");
+      showPRToast(t("toastDemo"));
     };
     body.querySelector("#resetDataBtn").onclick = () => {
       openModal(`
-        <div style="font-size:16px;font-weight:700;margin-bottom:8px">Reset All Data?</div>
-        <div class="muted" style="margin-bottom:16px">This clears all logged workouts and restores defaults.</div>
+        <div style="font-size:16px;font-weight:700;margin-bottom:8px">${esc(t("resetTitle"))}</div>
+        <div class="muted" style="margin-bottom:16px">${esc(t("resetMsg"))}</div>
         <div class="grid-2">
-          <button class="btn btn-ghost" id="cReset">Cancel</button>
-          <button class="btn btn-danger" id="yReset">Reset</button>
+          <button class="btn btn-ghost" id="cReset">${esc(t("cancel"))}</button>
+          <button class="btn btn-danger" id="yReset">${esc(t("reset"))}</button>
         </div>
       `);
       document.getElementById("cReset").onclick = closeModal;
       document.getElementById("yReset").onclick = () => {
         state.workouts = [];
+        state.bodyweights = [];
         state.activeWorkout = null;
         state.exercises = DEFAULT_EXERCISES.slice();
         state.templates = DEFAULT_TEMPLATES.slice();
@@ -2504,12 +3046,13 @@
         exercises: Array.isArray(parsed.exercises) && parsed.exercises.length ? parsed.exercises : DEFAULT_EXERCISES.slice(),
         templates: Array.isArray(parsed.templates) ? parsed.templates : DEFAULT_TEMPLATES.slice(),
         workouts: Array.isArray(parsed.workouts) ? parsed.workouts : [],
+          bodyweights: Array.isArray(parsed.bodyweights) ? parsed.bodyweights : [],
         activeWorkout: parsed.activeWorkout || null
       };
       saveState(); applyTheme(); renderAll(); renderSettings();
-      showPRToast("Backup restored");
+      showPRToast(t("toastRestored"));
     } catch (e) {
-      showPRToast("Invalid JSON file");
+      showPRToast(t("toastInvalid"));
     }
   }
 
@@ -2551,6 +3094,12 @@
       });
     }
     state.workouts = demo;
+    const demoBw = [];
+    for (let i = 20; i >= 0; i--) {
+      const trend = 74.0 - (20 - i) * 0.06 + ((i % 3) - 1) * 0.25;
+      demoBw.push({ date: daysAgoStr(i), kg: Math.round(trend * 10) / 10 });
+    }
+    state.bodyweights = demoBw;
   }
 
   document.getElementById("openSettingsBtn").onclick = () => {
@@ -2569,6 +3118,7 @@
   }
 
   applyTheme();
+  initNativeBackButton();
   renderAll();
   if (state.activeWorkout) startSessionClock();
 })();
